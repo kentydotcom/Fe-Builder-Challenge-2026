@@ -1,0 +1,69 @@
+#[event]
+pub struct ClientRegistered {
+    #[indexed]
+    pub client: Address,
+    pub pubkey: u256,
+    pub stake: Wei,
+}
+
+#[event]
+pub struct RoundOpened {
+    #[indexed]
+    pub round_id: u256,
+}
+
+#[event]
+pub struct ReceiptSubmitted {
+    #[indexed]
+    pub round_id: u256,
+    #[indexed]
+    pub client: Address,
+    pub update_hash: u256,
+    pub score: u256,
+}
+
+#[event]
+pub struct FedAvgAttested {
+    #[indexed]
+    pub round_id: u256,
+    pub sum_commitment: u256,
+    pub avg_commitment: u256,
+    pub set_commitment: u256,
+    pub participants: u256,
+}
+
+#[event]
+pub struct PoisonAccused {
+    #[indexed]
+    pub accusation_id: u256,
+    #[indexed]
+    pub accuser: Address,
+    pub accused: Address,
+    pub bond: Wei,
+}
+
+#[event]
+pub struct PoisonVoted {
+    #[indexed]
+    pub accusation_id: u256,
+    #[indexed]
+    pub voter: Address,
+    pub support: bool,
+}
+
+#[event]
+pub struct AccusationResolved {
+    #[indexed]
+    pub accusation_id: u256,
+    pub verdict: u8,
+    pub accuser_payout: Wei,
+    pub treasury_gain: Wei,
+}
+
+#[event]
+pub struct FedAvgRevised {
+    #[indexed]
+    pub round_id: u256,
+    pub avg_commitment: u256,
+    pub participants: u256,
+}

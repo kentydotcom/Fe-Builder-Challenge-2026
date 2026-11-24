@@ -1,0 +1,82 @@
+#[error]
+pub struct BadParams {}
+
+#[error]
+pub struct StakeTooSmall {
+    pub sent: u256,
+    pub required: u256,
+}
+
+#[error]
+pub struct AlreadyRegistered {}
+
+#[error]
+pub struct NotRegistered {}
+
+#[error]
+pub struct ZeroAddress {}
+
+#[error]
+pub struct BadPhase {}
+
+#[error]
+pub struct RoundFull {}
+
+#[error]
+pub struct AlreadySubmitted {}
+
+#[error]
+pub struct EmptyHash {}
+
+#[error]
+pub struct BadCount {
+    pub count: u256,
+}
+
+#[error]
+pub struct MissingReceipt {}
+
+#[error]
+pub struct ScoreMismatch {}
+
+#[error]
+pub struct HashMismatch {}
+
+#[error]
+pub struct IncompleteSet {}
+
+#[error]
+pub struct DuplicateClient {}
+
+#[error]
+pub struct BadBond {
+    pub sent: u256,
+    pub required: u256,
+}
+
+#[error]
+pub struct SelfAccusation {}
+
+#[error]
+pub struct NoTarget {}
+
+#[error]
+pub struct AlreadyAccused {}
+
+#[error]
+pub struct BadAccusation {}
+
+#[error]
+pub struct NotAPeer {}
+
+#[error]
+pub struct AlreadyVoted {}
+
+#[error]
+pub struct TooManyVoters {}
+
+#[error]
+pub struct PayoutFailed {}
+
+#[error]
+pub struct EmptyAggregate {}

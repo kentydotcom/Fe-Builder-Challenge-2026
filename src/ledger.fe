@@ -1,0 +1,530 @@
+// On-chain book for one federated-learning round series.
+//
+// Storage holds client stake, receipt hashes, public L1 scores, FedAvg
+// commitments, and accusation records. Coordinate vectors are calldata at
+// attest/revise time and are not written into storage.
+
+use super::agg::{
+    fedavg, hash_update, is_outlier, l1, median, participant_commitment, zero_coords, Coords,
+    MIN_VOTES,
+}
+use super::errors::{
+    AlreadyAccused, AlreadyRegistered, AlreadySubmitted, AlreadyVoted, BadAccusation, BadBond,
+    BadCount, BadParams, BadPhase, DuplicateClient, EmptyAggregate, EmptyHash, HashMismatch,
+    IncompleteSet, MissingReceipt, NoTarget, NotAPeer, NotRegistered, RoundFull, ScoreMismatch,
+    SelfAccusation, StakeTooSmall, TooManyVoters, ZeroAddress,
+}
+use super::slash::{settle, verdict_code, SlashInput, Verdict}
+
+pub enum Phase {
+    Empty,
+    Open,
+    Attested,
+    Settled,
+}
+
+impl Copy for Phase {}
+
+pub struct Client {
+    pub registered: bool,
+    pub stake: Wei,
+    pub pubkey: u256,
+}
+
+impl Copy for Client {}
+
+pub struct Receipt {
+    pub submitted: bool,
+    pub update_hash: u256,
+    pub score: u256,
+    pub poisoned: bool,
+}
+
+impl Copy for Receipt {}
+
+pub struct Round {
+    pub phase: Phase,
+    pub receipt_count: u256,
+    pub clients: [Address; 4],
+    pub sum_commitment: u256,
+    pub avg_commitment: u256,
+    pub set_commitment: u256,
+    pub median_score: u256,
+    pub attested_count: u256,
+}
+
+impl Copy for Round {}
+
+pub struct Accusation {
+    pub exists: bool,
+    pub resolved: bool,
+    pub round_id: u256,
+    pub accuser: Address,
+    pub accused: Address,
+    pub bond: Wei,
+    pub support_stake: Wei,
+    pub oppose_stake: Wei,
+    pub support_votes: u256,
+    pub oppose_votes: u256,
+    pub voters: [Address; 4],
+    pub voter_count: u256,
+}
+
+impl Copy for Accusation {}
+
+pub struct Payout {
+    pub accuser: Address,
+    pub accuser_amount: Wei,
+    pub accused: Address,
+    pub accused_amount: Wei,
+    pub voters: [Address; 4],
+    pub voter_count: u256,
+    pub voter_refund: Wei,
+    pub verdict: u8,
+    pub treasury_gain: Wei,
+}
+
+impl Copy for Payout {}
+
+pub struct Ledger {
+    pub min_stake: Wei,
+    pub bond: Wei,
+    pub vote_bond: Wei,
+    pub slash_amount: Wei,
+    pub treasury: Wei,
+    pub next_accusation: u256,
+    pub clients: StorageMap<Address, Client>,
+    pub rounds: StorageMap<u256, Round>,
+    pub receipts: StorageMap<(u256, Address), Receipt>,
+    pub accusations: StorageMap<u256, Accusation>,
+    pub accusation_of: StorageMap<(u256, Address), u256>,
+}
+
+fn as_index(_ count: u256) -> usize {
+    if count == 0 {
+        0
+    } else if count == 1 {
+        1
+    } else if count == 2 {
+        2
+    } else if count == 3 {
+        3
+    } else if count == 4 {
+        4
+    } else {
+        revert_error(BadCount { count })
+    }
+}
+
+fn phase_code(_ phase: Phase) -> u8 {
+    match phase {
+        Phase::Empty => 0,
+        Phase::Open => 1,
+        Phase::Attested => 2,
+        Phase::Settled => 3,
+    }
+}
+
+fn require_phase(_ phase: Phase, _ expected: Phase) {
+    let ok = match phase {
+        Phase::Empty => match expected {
+            Phase::Empty => true,
+            _ => false,
+        },
+        Phase::Open => match expected {
+            Phase::Open => true,
+            _ => false,
+        },
+        Phase::Attested => match expected {
+            Phase::Attested => true,
+            _ => false,
+        },
+        Phase::Settled => match expected {
+            Phase::Settled => true,
+            _ => false,
+        },
+    }
+    if !ok {
+        revert_error(BadPhase {})
+    }
+}
+
+impl Ledger {
+    pub fn configure(mut self, _ min_stake: Wei, _ bond: Wei, _ vote_bond: Wei, _ slash_amount: Wei) {
+        if min_stake.as_wei() == 0 || bond.as_wei() == 0 || vote_bond.as_wei() == 0 || slash_amount.as_wei() == 0 {
+            revert_error(BadParams {})
+        }
+        if slash_amount > min_stake {
+            revert_error(BadParams {})
+        }
+        self.min_stake = min_stake
+        self.bond = bond
+        self.vote_bond = vote_bond
+        self.slash_amount = slash_amount
+        self.treasury = Wei::zero()
+        self.next_accusation = 1
+    }
+
+    pub fn register(mut self, _ who: Address, _ pubkey: u256, _ value: Wei) {
+        if who == Address::zero() {
+            revert_error(ZeroAddress {})
+        }
+        var client = self.clients.get(key: who)
+        if client.registered {
+            revert_error(AlreadyRegistered {})
+        }
+        if value < self.min_stake {
+            revert_error(StakeTooSmall { sent: value.as_wei(), required: self.min_stake.as_wei() })
+        }
+        client.registered = true
+        client.stake = value
+        client.pubkey = pubkey
+        self.clients.set(key: who, value: client)
+    }
+
+    pub fn open_round(mut self, _ round_id: u256) {
+        var round = self.rounds.get(key: round_id)
+        require_phase(phase: round.phase, expected: Phase::Empty)
+        round.phase = Phase::Open
+        self.rounds.set(key: round_id, value: round)
+    }
+
+    pub fn submit(mut self, _ who: Address, _ round_id: u256, _ update_hash: u256, _ score: u256) {
+        let client = self.clients.get(key: who)
+        if !client.registered {
+            revert_error(NotRegistered {})
+        }
+        var round = self.rounds.get(key: round_id)
+        require_phase(phase: round.phase, expected: Phase::Open)
+        if round.receipt_count == 4 {
+            revert_error(RoundFull {})
+        }
+        var receipt = self.receipts.get(key: (round_id, who))
+        if receipt.submitted {
+            revert_error(AlreadySubmitted {})
+        }
+        if update_hash == 0 {
+            revert_error(EmptyHash {})
+        }
+        receipt.submitted = true
+        receipt.update_hash = update_hash
+        receipt.score = score
+        receipt.poisoned = false
+        self.receipts.set(key: (round_id, who), value: receipt)
+        let index = as_index(round.receipt_count)
+        round.clients[index] = who
+        round.receipt_count = round.receipt_count + 1
+        self.rounds.set(key: round_id, value: round)
+    }
+
+    pub fn attest(
+        mut self, _ round_id: u256, _ clients: [Address; 4], _ c0: [i64; 4], _ c1: [i64; 4], _ c2: [i64; 4], _ c3: [i64; 4], _ count: u256) {
+        self.open_and_check(
+            round_id,
+            clients,
+            c0,
+            c1,
+            c2,
+            c3,
+            count,
+            false,
+        )
+    }
+
+    pub fn revise(
+        mut self, _ round_id: u256, _ clients: [Address; 4], _ c0: [i64; 4], _ c1: [i64; 4], _ c2: [i64; 4], _ c3: [i64; 4], _ count: u256) {
+        self.open_and_check(
+            round_id,
+            clients,
+            c0,
+            c1,
+            c2,
+            c3,
+            count,
+            true,
+        )
+    }
+
+    fn open_and_check(
+        mut self, _ round_id: u256, _ clients: [Address; 4], _ c0: [i64; 4], _ c1: [i64; 4], _ c2: [i64; 4], _ c3: [i64; 4], _ count: u256, _ revising: bool) {
+        if count == 0 || count > 4 {
+            revert_error(BadCount { count })
+        }
+        let n = as_index(count)
+        var round = self.rounds.get(key: round_id)
+        if revising {
+            require_phase(phase: round.phase, expected: Phase::Attested)
+        } else {
+            require_phase(phase: round.phase, expected: Phase::Open)
+        }
+
+        var rows: [Coords; 4] = [zero_coords(), zero_coords(), zero_coords(), zero_coords()]
+        var scores: [u256; 4] = [0, 0, 0, 0]
+        var words: [u256; 4] = [0, 0, 0, 0]
+        var seen: [Address; 4] = [Address::zero(), Address::zero(), Address::zero(), Address::zero()]
+        var index: usize = 0
+        while index < n {
+            let who = clients[index]
+            if who == Address::zero() {
+                revert_error(ZeroAddress {})
+            }
+            var previous: usize = 0
+            while previous < index {
+                if seen[previous] == who {
+                    revert_error(DuplicateClient {})
+                }
+                previous = previous + 1
+            }
+            seen[index] = who
+            let receipt = self.receipts.get(key: (round_id, who))
+            if !receipt.submitted {
+                revert_error(MissingReceipt {})
+            }
+            if revising && receipt.poisoned {
+                revert_error(NoTarget {})
+            }
+            if !revising && receipt.poisoned {
+                revert_error(NoTarget {})
+            }
+            let coords = Coords { c0: c0[index], c1: c1[index], c2: c2[index], c3: c3[index] }
+            let score = l1(coords)
+            if score != receipt.score {
+                revert_error(ScoreMismatch {})
+            }
+            if hash_update(round_id, who.word(), coords) != receipt.update_hash {
+                revert_error(HashMismatch {})
+            }
+            rows[index] = coords
+            scores[index] = score
+            words[index] = who.word()
+            index = index + 1
+        }
+
+        let stored_n = as_index(round.receipt_count)
+        var expected: u256 = 0
+        var cursor: usize = 0
+        while cursor < stored_n {
+            let stored = round.clients[cursor]
+            let receipt = self.receipts.get(key: (round_id, stored))
+            let include = if revising { !receipt.poisoned } else { true }
+            if include {
+                expected = expected + 1
+                var found = false
+                var look: usize = 0
+                while look < n {
+                    if seen[look] == stored {
+                        found = true
+                    }
+                    look = look + 1
+                }
+                if !found {
+                    revert_error(IncompleteSet {})
+                }
+            }
+            cursor = cursor + 1
+        }
+        if expected != count {
+            revert_error(IncompleteSet {})
+        }
+        if expected == 0 {
+            revert_error(EmptyAggregate {})
+        }
+
+        let average = fedavg(rows, n)
+        round.sum_commitment = average.sum_commitment
+        round.avg_commitment = average.avg_commitment
+        round.set_commitment = participant_commitment(words, n)
+        round.median_score = median(scores, n)
+        round.attested_count = count
+        if revising {
+            round.phase = Phase::Settled
+        } else {
+            round.phase = Phase::Attested
+        }
+        self.rounds.set(key: round_id, value: round)
+    }
+
+    pub fn accuse(mut self, _ accuser: Address, _ round_id: u256, _ accused: Address, _ value: Wei) -> u256 {
+        if value != self.bond {
+            revert_error(BadBond { sent: value.as_wei(), required: self.bond.as_wei() })
+        }
+        if accuser == accused {
+            revert_error(SelfAccusation {})
+        }
+        let accuser_client = self.clients.get(key: accuser)
+        if !accuser_client.registered {
+            revert_error(NotRegistered {})
+        }
+        let accused_client = self.clients.get(key: accused)
+        if !accused_client.registered {
+            revert_error(NotRegistered {})
+        }
+        let round = self.rounds.get(key: round_id)
+        require_phase(phase: round.phase, expected: Phase::Attested)
+        let receipt = self.receipts.get(key: (round_id, accused))
+        if !receipt.submitted || receipt.poisoned {
+            revert_error(NoTarget {})
+        }
+        if self.accusation_of.get(key: (round_id, accused)) != 0 {
+            revert_error(AlreadyAccused {})
+        }
+        let id = self.next_accusation
+        self.next_accusation = id + 1
+        var accusation = self.accusations.get(key: id)
+        accusation.exists = true
+        accusation.resolved = false
+        accusation.round_id = round_id
+        accusation.accuser = accuser
+        accusation.accused = accused
+        accusation.bond = value
+        accusation.support_stake = Wei::zero()
+        accusation.oppose_stake = Wei::zero()
+        accusation.support_votes = 0
+        accusation.oppose_votes = 0
+        accusation.voter_count = 0
+        self.accusations.set(key: id, value: accusation)
+        self.accusation_of.set(key: (round_id, accused), value: id)
+        id
+    }
+
+    pub fn vote(mut self, _ voter: Address, _ accusation_id: u256, _ support: bool, _ value: Wei) {
+        if value != self.vote_bond {
+            revert_error(BadBond { sent: value.as_wei(), required: self.vote_bond.as_wei() })
+        }
+        var accusation = self.accusations.get(key: accusation_id)
+        if !accusation.exists || accusation.resolved {
+            revert_error(BadAccusation {})
+        }
+        if voter == accusation.accuser || voter == accusation.accused {
+            revert_error(NotAPeer {})
+        }
+        let client = self.clients.get(key: voter)
+        if !client.registered {
+            revert_error(NotRegistered {})
+        }
+        if accusation.voter_count == 4 {
+            revert_error(TooManyVoters {})
+        }
+        let n = as_index(accusation.voter_count)
+        var index: usize = 0
+        while index < n {
+            if accusation.voters[index] == voter {
+                revert_error(AlreadyVoted {})
+            }
+            index = index + 1
+        }
+        accusation.voters[n] = voter
+        accusation.voter_count = accusation.voter_count + 1
+        if support {
+            accusation.support_votes = accusation.support_votes + 1
+            accusation.support_stake = accusation.support_stake + value
+        } else {
+            accusation.oppose_votes = accusation.oppose_votes + 1
+            accusation.oppose_stake = accusation.oppose_stake + value
+        }
+        self.accusations.set(key: accusation_id, value: accusation)
+    }
+
+    pub fn resolve(mut self, _ accusation_id: u256) -> Payout {
+        var accusation = self.accusations.get(key: accusation_id)
+        if !accusation.exists || accusation.resolved {
+            revert_error(BadAccusation {})
+        }
+        let round = self.rounds.get(key: accusation.round_id)
+        require_phase(phase: round.phase, expected: Phase::Attested)
+        let receipt = self.receipts.get(key: (accusation.round_id, accusation.accused))
+        let outlier = is_outlier(score: receipt.score, median_score: round.median_score)
+        var accused = self.clients.get(key: accusation.accused)
+        let output = settle(SlashInput {
+            objective_outlier: outlier,
+            support_votes: accusation.support_votes,
+            support_stake: accusation.support_stake,
+            oppose_stake: accusation.oppose_stake,
+            accuser_bond: accusation.bond,
+            accused_stake: accused.stake,
+            slash_amount: self.slash_amount,
+            min_votes: MIN_VOTES,
+        })
+        accused.stake = output.accused_stake
+        self.clients.set(key: accusation.accused, value: accused)
+        if verdict_code(output.verdict) == verdict_code(Verdict::Upheld) {
+            var marked = receipt
+            marked.poisoned = true
+            self.receipts.set(key: (accusation.round_id, accusation.accused), value: marked)
+        }
+        accusation.resolved = true
+        self.accusations.set(key: accusation_id, value: accusation)
+        self.treasury = self.treasury + output.treasury_gain
+        Payout {
+            accuser: accusation.accuser,
+            accuser_amount: output.accuser_payout,
+            accused: accusation.accused,
+            accused_amount: output.accused_compensation,
+            voters: accusation.voters,
+            voter_count: accusation.voter_count,
+            voter_refund: self.vote_bond,
+            verdict: verdict_code(output.verdict),
+            treasury_gain: output.treasury_gain,
+        }
+    }
+
+    pub fn phase_of(self, _ round_id: u256) -> u8 {
+        phase_code(self.rounds.get(key: round_id).phase)
+    }
+
+    pub fn stake_of(self, _ who: Address) -> Wei {
+        self.clients.get(key: who).stake
+    }
+
+    pub fn registered(self, _ who: Address) -> bool {
+        self.clients.get(key: who).registered
+    }
+
+    pub fn receipt_count(self, _ round_id: u256) -> u256 {
+        self.rounds.get(key: round_id).receipt_count
+    }
+
+    pub fn sum_commitment(self, _ round_id: u256) -> u256 {
+        self.rounds.get(key: round_id).sum_commitment
+    }
+
+    pub fn avg_commitment(self, _ round_id: u256) -> u256 {
+        self.rounds.get(key: round_id).avg_commitment
+    }
+
+    pub fn set_commitment(self, _ round_id: u256) -> u256 {
+        self.rounds.get(key: round_id).set_commitment
+    }
+
+    pub fn median_score(self, _ round_id: u256) -> u256 {
+        self.rounds.get(key: round_id).median_score
+    }
+
+    pub fn attested_count(self, _ round_id: u256) -> u256 {
+        self.rounds.get(key: round_id).attested_count
+    }
+
+    pub fn poisoned(self, _ round_id: u256, _ who: Address) -> bool {
+        self.receipts.get(key: (round_id, who)).poisoned
+    }
+
+    pub fn update_hash(self, _ round_id: u256, _ who: Address) -> u256 {
+        self.receipts.get(key: (round_id, who)).update_hash
+    }
+
+    pub fn score(self, _ round_id: u256, _ who: Address) -> u256 {
+        self.receipts.get(key: (round_id, who)).score
+    }
+
+    pub fn submitted(self, _ round_id: u256, _ who: Address) -> bool {
+        self.receipts.get(key: (round_id, who)).submitted
+    }
+
+    pub fn accusation_id(self, _ round_id: u256, _ accused: Address) -> u256 {
+        self.accusation_of.get(key: (round_id, accused))
+    }
+
+    pub fn pubkey_of(self, _ who: Address) -> u256 {
+        self.clients.get(key: who).pubkey
+    }
+}

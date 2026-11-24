@@ -1,0 +1,176 @@
+// Accusation settlement. Bonds are `Wei`, so a gradient coordinate cannot be
+// added to a stake: the types do not share arithmetic.
+//
+// Three terminal verdicts:
+// - FalseAccusation: the update is not an outlier. The accuser's bond is
+//   slashed (half to the accused, half to the treasury). The accused stake
+//   stays. Peer vote bonds are returned by the caller, not here.
+// - FailedQuorum: the update is an outlier, but support votes are below
+//   `min_votes` or support stake does not beat oppose stake. The accuser
+//   bond is returned. Nobody is slashed.
+// - Upheld: outlier and quorum. `slash_amount` (capped by the accused stake)
+//   is taken from the accused. Half of that slash is a bounty added to the
+//   returned accuser bond. The rest goes to the treasury.
+
+use std::evm::{Wei, wei}
+
+pub enum Verdict {
+    Upheld,
+    FalseAccusation,
+    FailedQuorum,
+}
+
+impl Copy for Verdict {}
+
+pub fn verdict_code(_ verdict: Verdict) -> u8 {
+    match verdict {
+        Verdict::Upheld => 1,
+        Verdict::FalseAccusation => 2,
+        Verdict::FailedQuorum => 3,
+    }
+}
+
+pub struct SlashInput {
+    pub objective_outlier: bool,
+    pub support_votes: u256,
+    pub support_stake: Wei,
+    pub oppose_stake: Wei,
+    pub accuser_bond: Wei,
+    pub accused_stake: Wei,
+    pub slash_amount: Wei,
+    pub min_votes: u256,
+}
+
+pub struct SlashOutput {
+    pub verdict: Verdict,
+    pub accuser_payout: Wei,
+    pub accused_stake: Wei,
+    pub accused_compensation: Wei,
+    pub treasury_gain: Wei,
+}
+
+pub fn settle(_ input: SlashInput) -> SlashOutput {
+    if !input.objective_outlier {
+        let half = input.accuser_bond / 2
+        let rest = input.accuser_bond - half
+        return SlashOutput {
+            verdict: Verdict::FalseAccusation,
+            accuser_payout: Wei::zero(),
+            accused_stake: input.accused_stake,
+            accused_compensation: half,
+            treasury_gain: rest,
+        }
+    }
+
+    let quorum = input.support_votes >= input.min_votes && input.support_stake > input.oppose_stake
+    if !quorum {
+        return SlashOutput {
+            verdict: Verdict::FailedQuorum,
+            accuser_payout: input.accuser_bond,
+            accused_stake: input.accused_stake,
+            accused_compensation: Wei::zero(),
+            treasury_gain: Wei::zero(),
+        }
+    }
+
+    let taken = if input.slash_amount > input.accused_stake {
+        input.accused_stake
+    } else {
+        input.slash_amount
+    }
+    let bounty = taken / 2
+    let treasury = taken - bounty
+    SlashOutput {
+        verdict: Verdict::Upheld,
+        accuser_payout: input.accuser_bond + bounty,
+        accused_stake: input.accused_stake - taken,
+        accused_compensation: Wei::zero(),
+        treasury_gain: treasury,
+    }
+}
+
+#[test]
+fn test_unit_slash_false_accusation() {
+    let output = settle(SlashInput {
+        objective_outlier: false,
+        support_votes: 3,
+        support_stake: wei(900),
+        oppose_stake: Wei::zero(),
+        accuser_bond: wei(400),
+        accused_stake: wei(1000),
+        slash_amount: wei(500),
+        min_votes: 1,
+    })
+    assert!(verdict_code(output.verdict) == 2)
+    assert!(output.accuser_payout == Wei::zero())
+    assert!(output.accused_stake == wei(1000))
+    assert!(output.accused_compensation == wei(200))
+    assert!(output.treasury_gain == wei(200))
+}
+
+#[test]
+fn test_unit_slash_failed_quorum() {
+    let output = settle(SlashInput {
+        objective_outlier: true,
+        support_votes: 0,
+        support_stake: Wei::zero(),
+        oppose_stake: Wei::zero(),
+        accuser_bond: wei(400),
+        accused_stake: wei(1000),
+        slash_amount: wei(500),
+        min_votes: 1,
+    })
+    assert!(verdict_code(output.verdict) == 3)
+    assert!(output.accuser_payout == wei(400))
+    assert!(output.accused_stake == wei(1000))
+    assert!(output.treasury_gain == Wei::zero())
+}
+
+#[test]
+fn test_unit_slash_upheld_and_capped() {
+    let output = settle(SlashInput {
+        objective_outlier: true,
+        support_votes: 1,
+        support_stake: wei(100),
+        oppose_stake: wei(50),
+        accuser_bond: wei(400),
+        accused_stake: wei(1000),
+        slash_amount: wei(500),
+        min_votes: 1,
+    })
+    assert!(verdict_code(output.verdict) == 1)
+    assert!(output.accuser_payout == wei(650))
+    assert!(output.accused_stake == wei(500))
+    assert!(output.accused_compensation == Wei::zero())
+    assert!(output.treasury_gain == wei(250))
+
+    let capped = settle(SlashInput {
+        objective_outlier: true,
+        support_votes: 2,
+        support_stake: wei(10),
+        oppose_stake: wei(1),
+        accuser_bond: wei(10),
+        accused_stake: wei(4),
+        slash_amount: wei(9),
+        min_votes: 1,
+    })
+    assert!(capped.accused_stake == Wei::zero())
+    assert!(capped.accuser_payout == wei(12))
+    assert!(capped.treasury_gain == wei(2))
+}
+
+#[test]
+fn test_unit_slash_oppose_blocks_quorum() {
+    let output = settle(SlashInput {
+        objective_outlier: true,
+        support_votes: 2,
+        support_stake: wei(100),
+        oppose_stake: wei(100),
+        accuser_bond: wei(400),
+        accused_stake: wei(1000),
+        slash_amount: wei(500),
+        min_votes: 1,
+    })
+    assert!(verdict_code(output.verdict) == 3)
+    assert!(output.accused_stake == wei(1000))
+}

@@ -1,0 +1,326 @@
+// FlRegistry is the EVM surface of the judge tour.
+//
+// Handlers check the caller and the attached ETH, then hand the books to
+// `Ledger`. Payouts and events stay here: a storage method cannot emit a log
+// or send ETH unless the handler passes those effects in. That split is
+// deliberate. Weights never land in storage; attest and revise recompute
+// FedAvg from calldata and keep the commitments.
+
+use agg::{fedavg, hash_update, l1, Coords}
+use errors::PayoutFailed
+use events::{
+    AccusationResolved, ClientRegistered, FedAvgAttested, FedAvgRevised, PoisonAccused, PoisonVoted,
+    ReceiptSubmitted, RoundOpened,
+}
+use ledger::{Ledger, Payout}
+use std::abi::sol
+
+pub msg FlMsg {
+    #[selector = sol("register(uint256)")]
+    Register { pubkey: u256 },
+
+    #[selector = sol("openRound(uint256)")]
+    OpenRound { round_id: u256 },
+
+    #[selector = sol("submitReceipt(uint256,uint256,uint256)")]
+    SubmitReceipt { round_id: u256, update_hash: u256, score: u256 },
+
+    #[selector = sol("attest(uint256,address[4],int64[4],int64[4],int64[4],int64[4],uint256)")]
+    Attest {
+        round_id: u256,
+        clients: [Address; 4],
+        c0: [i64; 4],
+        c1: [i64; 4],
+        c2: [i64; 4],
+        c3: [i64; 4],
+        count: u256,
+    },
+
+    #[selector = sol("revise(uint256,address[4],int64[4],int64[4],int64[4],int64[4],uint256)")]
+    Revise {
+        round_id: u256,
+        clients: [Address; 4],
+        c0: [i64; 4],
+        c1: [i64; 4],
+        c2: [i64; 4],
+        c3: [i64; 4],
+        count: u256,
+    },
+
+    #[selector = sol("accuse(uint256,address)")]
+    Accuse { round_id: u256, accused: Address } -> u256,
+
+    #[selector = sol("vote(uint256,bool)")]
+    Vote { accusation_id: u256, support: bool },
+
+    #[selector = sol("resolve(uint256)")]
+    Resolve { accusation_id: u256 } -> u8,
+
+    #[selector = sol("hashOpening(uint256,address,int64,int64,int64,int64)")]
+    HashOpening {
+        round_id: u256,
+        client: Address,
+        c0: i64,
+        c1: i64,
+        c2: i64,
+        c3: i64,
+    } -> u256,
+
+    #[selector = sol("scoreOf(int64,int64,int64,int64)")]
+    ScoreOf { c0: i64, c1: i64, c2: i64, c3: i64 } -> u256,
+
+    #[selector = sol("previewAverage(int64[4],int64[4],int64[4],int64[4],uint256)")]
+    PreviewAverage {
+        c0: [i64; 4],
+        c1: [i64; 4],
+        c2: [i64; 4],
+        c3: [i64; 4],
+        count: u256,
+    } -> u256,
+
+    #[selector = sol("phase(uint256)")]
+    PhaseOf { round_id: u256 } -> u8,
+
+    #[selector = sol("stakeOf(address)")]
+    StakeOf { client: Address } -> u256,
+
+    #[selector = sol("registered(address)")]
+    Registered { client: Address } -> bool,
+
+    #[selector = sol("receiptCount(uint256)")]
+    ReceiptCount { round_id: u256 } -> u256,
+
+    #[selector = sol("updateHash(uint256,address)")]
+    UpdateHash { round_id: u256, client: Address } -> u256,
+
+    #[selector = sol("poisoned(uint256,address)")]
+    Poisoned { round_id: u256, client: Address } -> bool,
+
+    #[selector = sol("avgCommitment(uint256)")]
+    AvgCommitment { round_id: u256 } -> u256,
+
+    #[selector = sol("sumCommitment(uint256)")]
+    SumCommitment { round_id: u256 } -> u256,
+
+    #[selector = sol("setCommitment(uint256)")]
+    SetCommitment { round_id: u256 } -> u256,
+
+    #[selector = sol("medianScore(uint256)")]
+    MedianScore { round_id: u256 } -> u256,
+
+    #[selector = sol("attestedCount(uint256)")]
+    AttestedCount { round_id: u256 } -> u256,
+
+    #[selector = sol("treasury()")]
+    Treasury -> u256,
+
+    #[selector = sol("minStake()")]
+    MinStake -> u256,
+
+    #[selector = sol("bond()")]
+    Bond -> u256,
+
+    #[selector = sol("accusationId(uint256,address)")]
+    AccusationId { round_id: u256, accused: Address } -> u256,
+}
+
+pub contract FlRegistry uses (ctx: Ctx, call: mut Call, log: mut Log) {
+    mut ledger: Ledger,
+
+    init(min_stake: Wei, bond: Wei, vote_bond: Wei, slash_amount: Wei) uses (mut ledger) {
+        ledger.configure(min_stake, bond, vote_bond, slash_amount)
+    }
+
+    recv FlMsg {
+        #[payable]
+        Register { pubkey } uses (mut ledger, ctx, mut log) {
+            let caller = ctx.caller()
+            let value = ctx.value()
+            ledger.register(caller, pubkey, value)
+            log.emit(ClientRegistered { client: caller, pubkey, stake: value })
+        }
+
+        OpenRound { round_id } uses (mut ledger, mut log) {
+            ledger.open_round(round_id)
+            log.emit(RoundOpened { round_id })
+        }
+
+        SubmitReceipt { round_id, update_hash, score } uses (mut ledger, ctx, mut log) {
+            let caller = ctx.caller()
+            ledger.submit(caller, round_id, update_hash, score)
+            log.emit(ReceiptSubmitted { round_id, client: caller, update_hash, score })
+        }
+
+        Attest { round_id, clients, c0, c1, c2, c3, count } uses (mut ledger, mut log) {
+            ledger.attest(round_id, clients, c0, c1, c2, c3, count)
+            log.emit(FedAvgAttested {
+                round_id,
+                sum_commitment: ledger.sum_commitment(round_id),
+                avg_commitment: ledger.avg_commitment(round_id),
+                set_commitment: ledger.set_commitment(round_id),
+                participants: ledger.attested_count(round_id),
+            })
+        }
+
+        Revise { round_id, clients, c0, c1, c2, c3, count } uses (mut ledger, mut log) {
+            ledger.revise(round_id, clients, c0, c1, c2, c3, count)
+            log.emit(FedAvgRevised {
+                round_id,
+                avg_commitment: ledger.avg_commitment(round_id),
+                participants: count,
+            })
+        }
+
+        #[payable]
+        Accuse { round_id, accused } -> u256 uses (mut ledger, ctx, mut log) {
+            let caller = ctx.caller()
+            let id = ledger.accuse(caller, round_id, accused, ctx.value())
+            log.emit(PoisonAccused { accusation_id: id, accuser: caller, accused, bond: ctx.value() })
+            id
+        }
+
+        #[payable]
+        Vote { accusation_id, support } uses (mut ledger, ctx, mut log) {
+            let caller = ctx.caller()
+            ledger.vote(caller, accusation_id, support, ctx.value())
+            log.emit(PoisonVoted { accusation_id, voter: caller, support })
+        }
+
+        Resolve { accusation_id } -> u8 uses (mut ledger, mut call, mut log) {
+            let payout = ledger.resolve(accusation_id)
+            send_payout(payout)
+            log.emit(AccusationResolved {
+                accusation_id,
+                verdict: payout.verdict,
+                accuser_payout: payout.accuser_amount,
+                treasury_gain: payout.treasury_gain,
+            })
+            payout.verdict
+        }
+
+        HashOpening { round_id, client, c0, c1, c2, c3 } -> u256 {
+            hash_update(round_id, client.word(), Coords { c0, c1, c2, c3 })
+        }
+
+        ScoreOf { c0, c1, c2, c3 } -> u256 {
+            l1(Coords { c0, c1, c2, c3 })
+        }
+
+        PreviewAverage { c0, c1, c2, c3, count } -> u256 {
+            let n = preview_len(count)
+            let rows = [
+                Coords { c0: c0[0], c1: c1[0], c2: c2[0], c3: c3[0] },
+                Coords { c0: c0[1], c1: c1[1], c2: c2[1], c3: c3[1] },
+                Coords { c0: c0[2], c1: c1[2], c2: c2[2], c3: c3[2] },
+                Coords { c0: c0[3], c1: c1[3], c2: c2[3], c3: c3[3] },
+            ]
+            fedavg(rows, n).avg_commitment
+        }
+
+        PhaseOf { round_id } -> u8 uses (ledger) {
+            ledger.phase_of(round_id)
+        }
+
+        StakeOf { client } -> u256 uses (ledger) {
+            ledger.stake_of(client).as_wei()
+        }
+
+        Registered { client } -> bool uses (ledger) {
+            ledger.registered(client)
+        }
+
+        ReceiptCount { round_id } -> u256 uses (ledger) {
+            ledger.receipt_count(round_id)
+        }
+
+        UpdateHash { round_id, client } -> u256 uses (ledger) {
+            ledger.update_hash(round_id, client)
+        }
+
+        Poisoned { round_id, client } -> bool uses (ledger) {
+            ledger.poisoned(round_id, client)
+        }
+
+        AvgCommitment { round_id } -> u256 uses (ledger) {
+            ledger.avg_commitment(round_id)
+        }
+
+        SumCommitment { round_id } -> u256 uses (ledger) {
+            ledger.sum_commitment(round_id)
+        }
+
+        SetCommitment { round_id } -> u256 uses (ledger) {
+            ledger.set_commitment(round_id)
+        }
+
+        MedianScore { round_id } -> u256 uses (ledger) {
+            ledger.median_score(round_id)
+        }
+
+        AttestedCount { round_id } -> u256 uses (ledger) {
+            ledger.attested_count(round_id)
+        }
+
+        Treasury -> u256 uses (ledger) {
+            ledger.treasury.as_wei()
+        }
+
+        MinStake -> u256 uses (ledger) {
+            ledger.min_stake.as_wei()
+        }
+
+        Bond -> u256 uses (ledger) {
+            ledger.bond.as_wei()
+        }
+
+        AccusationId { round_id, accused } -> u256 uses (ledger) {
+            ledger.accusation_id(round_id, accused)
+        }
+    }
+}
+
+fn preview_len(_ count: u256) -> usize {
+    if count == 1 {
+        1
+    } else if count == 2 {
+        2
+    } else if count == 3 {
+        3
+    } else if count == 4 {
+        4
+    } else {
+        revert_error(errors::BadCount { count })
+    }
+}
+
+fn send(_ to: Address, _ amount: Wei) uses (call: mut Call) {
+    if amount.as_wei() == 0 {
+        return
+    }
+    let outcome = call.send_value(addr: to, gas: 100000, value: amount)
+    if !outcome.success() {
+        revert_error(PayoutFailed {})
+    }
+}
+
+fn send_payout(_ payout: Payout) uses (call: mut Call) {
+    send(to: payout.accuser, amount: payout.accuser_amount)
+    send(to: payout.accused, amount: payout.accused_amount)
+    var index: usize = 0
+    while index < 4 {
+        if index == 0 && payout.voter_count == 0 {
+            return
+        }
+        if index == 1 && payout.voter_count < 2 {
+            return
+        }
+        if index == 2 && payout.voter_count < 3 {
+            return
+        }
+        if index == 3 && payout.voter_count < 4 {
+            return
+        }
+        send(to: payout.voters[index], amount: payout.voter_refund)
+        index = index + 1
+    }
+}

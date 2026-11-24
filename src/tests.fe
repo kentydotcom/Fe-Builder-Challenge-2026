@@ -1,0 +1,498 @@
+// Judge-tour tests. Each simulated client is an Agent so `ctx.caller()` differs.
+// `#[test(balance = ...)]` funds the test contract, which is the EVM sender.
+
+use super::agg::{fedavg, hash_update, l1, Coords}
+use super::agent::{Agent, AgentMsg}
+use super::{FlMsg, FlRegistry}
+use std::evm::wei
+
+const ROUND: u256 = 7
+const GAS: u256 = 3000000
+
+fn coords_a() -> Coords {
+    Coords { c0: 1, c1: 2, c2: 3, c3: 4 }
+}
+
+fn coords_b() -> Coords {
+    Coords { c0: 2, c1: 2, c2: 3, c3: 4 }
+}
+
+fn coords_c() -> Coords {
+    Coords { c0: 1, c1: 1, c2: 3, c3: 5 }
+}
+
+fn coords_d() -> Coords {
+    Coords { c0: 40, c1: 40, c2: 40, c3: 40 }
+}
+
+fn deploy() -> Address uses (evm: mut Evm) {
+    evm.create2<FlRegistry>(
+        value: Wei::zero(),
+        args: (wei(1000), wei(400), wei(100), wei(500)),
+        salt: 0,
+    )
+}
+
+fn deploy_agent(_ reg: Address, _ salt: u256) -> Address uses (evm: mut Evm) {
+    evm.create2<Agent>(value: Wei::zero(), args: (reg,), salt)
+}
+
+fn register(_ agent: Address, _ pubkey: u256) uses (evm: mut Evm) {
+    evm.call(
+        addr: agent,
+        gas: GAS,
+        value: wei(1000),
+        message: AgentMsg::Register { pubkey },
+    )
+}
+
+fn open(_ reg: Address) uses (evm: mut Evm) {
+    evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::OpenRound { round_id: ROUND },
+    )
+}
+
+fn submit(_ agent: Address, _ coords: Coords) uses (evm: mut Evm) {
+    let digest = hash_update(ROUND, agent.word(), coords)
+    let score = l1(coords)
+    evm.call(
+        addr: agent,
+        gas: GAS,
+        value: Wei::zero(),
+        message: AgentMsg::Submit { round_id: ROUND, update_hash: digest, score },
+    )
+}
+
+fn four_agents(_ reg: Address) -> [Address; 4] uses (evm: mut Evm) {
+    let a0 = deploy_agent(reg, 1)
+    let a1 = deploy_agent(reg, 2)
+    let a2 = deploy_agent(reg, 3)
+    let a3 = deploy_agent(reg, 4)
+    register(a0, 11)
+    register(a1, 12)
+    register(a2, 13)
+    register(a3, 14)
+    [a0, a1, a2, a3]
+}
+
+fn submit_all(_ agents: [Address; 4]) uses (evm: mut Evm) {
+    submit(agents[0], coords_a())
+    submit(agents[1], coords_b())
+    submit(agents[2], coords_c())
+    submit(agents[3], coords_d())
+}
+
+fn attest(_ reg: Address, _ agents: [Address; 4]) uses (evm: mut Evm) {
+    evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::Attest {
+            round_id: ROUND,
+            clients: agents,
+            c0: [1, 2, 1, 40],
+            c1: [2, 2, 1, 40],
+            c2: [3, 3, 3, 40],
+            c3: [4, 4, 5, 40],
+            count: 4,
+        },
+    )
+}
+
+#[test(balance = 5000000)]
+fn test_stage1_register_open_submit() uses (evm: mut Evm) {
+    let reg = deploy()
+    let agent = deploy_agent(reg, 1)
+    register(agent, 11)
+    let registered: bool = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::Registered { client: agent },
+    )
+    assert!(registered)
+    let stake: u256 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::StakeOf { client: agent },
+    )
+    assert!(stake == 1000)
+    open(reg)
+    let phase: u8 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::PhaseOf { round_id: ROUND },
+    )
+    assert!(phase == 1)
+    let coords = coords_a()
+    submit(agent, coords)
+    let count: u256 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::ReceiptCount { round_id: ROUND },
+    )
+    assert!(count == 1)
+    let stored: u256 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::UpdateHash { round_id: ROUND, client: agent },
+    )
+    let preview: u256 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::HashOpening {
+            round_id: ROUND,
+            client: agent,
+            c0: coords.c0,
+            c1: coords.c1,
+            c2: coords.c2,
+            c3: coords.c3,
+        },
+    )
+    assert!(stored == preview)
+    assert!(stored == hash_update(ROUND, agent.word(), coords))
+    let min_stake: u256 = evm.call(addr: reg, gas: GAS, value: Wei::zero(), message: FlMsg::MinStake {})
+    assert!(min_stake == 1000)
+}
+
+#[test(should_revert, balance = 5000000)]
+fn test_stage1_low_stake() uses (evm: mut Evm) {
+    let reg = deploy()
+    evm.call(addr: reg, gas: GAS, value: wei(1), message: FlMsg::Register { pubkey: 1 })
+}
+
+#[test(should_revert, balance = 5000000)]
+fn test_stage1_double_submit() uses (evm: mut Evm) {
+    let reg = deploy()
+    let agent = deploy_agent(reg, 1)
+    register(agent, 11)
+    open(reg)
+    submit(agent, coords_a())
+    submit(agent, coords_a())
+}
+
+#[test(balance = 5000000)]
+fn test_stage2_attest_fedavg() uses (evm: mut Evm) {
+    let reg = deploy()
+    let agents = four_agents(reg)
+    open(reg)
+    submit_all(agents)
+    attest(reg, agents)
+    let phase: u8 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::PhaseOf { round_id: ROUND },
+    )
+    assert!(phase == 2)
+    let avg: u256 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::AvgCommitment { round_id: ROUND },
+    )
+    let preview: u256 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::PreviewAverage {
+            c0: [1, 2, 1, 40],
+            c1: [2, 2, 1, 40],
+            c2: [3, 3, 3, 40],
+            c3: [4, 4, 5, 40],
+            count: 4,
+        },
+    )
+    let rows = [coords_a(), coords_b(), coords_c(), coords_d()]
+    assert!(avg == preview)
+    assert!(avg == fedavg(rows, 4).avg_commitment)
+    let median: u256 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::MedianScore { round_id: ROUND },
+    )
+    assert!(median == 10)
+    let participants: u256 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::AttestedCount { round_id: ROUND },
+    )
+    assert!(participants == 4)
+    let sum_commitment: u256 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::SumCommitment { round_id: ROUND },
+    )
+    assert!(sum_commitment != 0)
+}
+
+#[test(should_revert, balance = 5000000)]
+fn test_stage2_bad_opening() uses (evm: mut Evm) {
+    let reg = deploy()
+    let agents = four_agents(reg)
+    open(reg)
+    submit_all(agents)
+    evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::Attest {
+            round_id: ROUND,
+            clients: agents,
+            c0: [1, 2, 1, 1],
+            c1: [2, 2, 1, 1],
+            c2: [3, 3, 3, 1],
+            c3: [4, 4, 5, 1],
+            count: 4,
+        },
+    )
+}
+
+#[test(balance = 5000000)]
+fn test_stage3_upheld_slash_and_revise() uses (evm: mut Evm) {
+    let reg = deploy()
+    let agents = four_agents(reg)
+    open(reg)
+    submit_all(agents)
+    attest(reg, agents)
+    let accusation: u256 = evm.call(
+        addr: agents[0],
+        gas: GAS,
+        value: wei(400),
+        message: AgentMsg::Accuse { round_id: ROUND, accused: agents[3] },
+    )
+    assert!(accusation == 1)
+    evm.call(
+        addr: agents[1],
+        gas: GAS,
+        value: wei(100),
+        message: AgentMsg::Vote { accusation_id: accusation, support: true },
+    )
+    let verdict: u8 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::Resolve { accusation_id: accusation },
+    )
+    assert!(verdict == 1)
+    let poisoned: bool = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::Poisoned { round_id: ROUND, client: agents[3] },
+    )
+    assert!(poisoned)
+    let accused_stake: u256 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::StakeOf { client: agents[3] },
+    )
+    assert!(accused_stake == 500)
+    let treasury: u256 = evm.call(addr: reg, gas: GAS, value: Wei::zero(), message: FlMsg::Treasury {})
+    assert!(treasury == 250)
+    assert!(evm.balance(agents[0]) == wei(650))
+    assert!(evm.balance(agents[1]) == wei(100))
+    assert!(evm.balance(agents[3]) == Wei::zero())
+
+    evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::Revise {
+            round_id: ROUND,
+            clients: [agents[0], agents[1], agents[2], Address::zero()],
+            c0: [1, 2, 1, 0],
+            c1: [2, 2, 1, 0],
+            c2: [3, 3, 3, 0],
+            c3: [4, 4, 5, 0],
+            count: 3,
+        },
+    )
+    let phase: u8 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::PhaseOf { round_id: ROUND },
+    )
+    assert!(phase == 3)
+    let revised: u256 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::AvgCommitment { round_id: ROUND },
+    )
+    let honest = [coords_a(), coords_b(), coords_c(), Coords { c0: 0, c1: 0, c2: 0, c3: 0 }]
+    assert!(revised == fedavg(honest, 3).avg_commitment)
+    let original = fedavg([coords_a(), coords_b(), coords_c(), coords_d()], 4).avg_commitment
+    assert!(revised != original)
+}
+
+#[test(balance = 5000000)]
+fn test_stage3_false_accusation() uses (evm: mut Evm) {
+    let reg = deploy()
+    let agents = four_agents(reg)
+    open(reg)
+    submit_all(agents)
+    attest(reg, agents)
+    let accusation: u256 = evm.call(
+        addr: agents[0],
+        gas: GAS,
+        value: wei(400),
+        message: AgentMsg::Accuse { round_id: ROUND, accused: agents[1] },
+    )
+    let verdict: u8 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::Resolve { accusation_id: accusation },
+    )
+    assert!(verdict == 2)
+    let stake: u256 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::StakeOf { client: agents[1] },
+    )
+    assert!(stake == 1000)
+    let poisoned: bool = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::Poisoned { round_id: ROUND, client: agents[1] },
+    )
+    assert!(!poisoned)
+    assert!(evm.balance(agents[0]) == Wei::zero())
+    assert!(evm.balance(agents[1]) == wei(200))
+    let treasury: u256 = evm.call(addr: reg, gas: GAS, value: Wei::zero(), message: FlMsg::Treasury {})
+    assert!(treasury == 200)
+}
+
+#[test(balance = 5000000)]
+fn test_stage3_failed_quorum() uses (evm: mut Evm) {
+    let reg = deploy()
+    let agents = four_agents(reg)
+    open(reg)
+    submit_all(agents)
+    attest(reg, agents)
+    let accusation: u256 = evm.call(
+        addr: agents[0],
+        gas: GAS,
+        value: wei(400),
+        message: AgentMsg::Accuse { round_id: ROUND, accused: agents[3] },
+    )
+    let verdict: u8 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::Resolve { accusation_id: accusation },
+    )
+    assert!(verdict == 3)
+    let poisoned: bool = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::Poisoned { round_id: ROUND, client: agents[3] },
+    )
+    assert!(!poisoned)
+    let stake: u256 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::StakeOf { client: agents[3] },
+    )
+    assert!(stake == 1000)
+    assert!(evm.balance(agents[0]) == wei(400))
+    let treasury: u256 = evm.call(addr: reg, gas: GAS, value: Wei::zero(), message: FlMsg::Treasury {})
+    assert!(treasury == 0)
+}
+
+#[test(should_revert, balance = 5000000)]
+fn test_stage3_self_accusation() uses (evm: mut Evm) {
+    let reg = deploy()
+    let agents = four_agents(reg)
+    open(reg)
+    submit_all(agents)
+    attest(reg, agents)
+    evm.call(
+        addr: agents[0],
+        gas: GAS,
+        value: wei(400),
+        message: AgentMsg::Accuse { round_id: ROUND, accused: agents[0] },
+    )
+}
+
+#[test(balance = 5000000)]
+fn test_tour_judge_full() uses (evm: mut Evm) {
+    let reg = deploy()
+    let agents = four_agents(reg)
+    open(reg)
+    submit_all(agents)
+    let phase_open: u8 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::PhaseOf { round_id: ROUND },
+    )
+    assert!(phase_open == 1)
+    attest(reg, agents)
+    let accusation: u256 = evm.call(
+        addr: agents[2],
+        gas: GAS,
+        value: wei(400),
+        message: AgentMsg::Accuse { round_id: ROUND, accused: agents[3] },
+    )
+    evm.call(
+        addr: agents[0],
+        gas: GAS,
+        value: wei(100),
+        message: AgentMsg::Vote { accusation_id: accusation, support: true },
+    )
+    let verdict: u8 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::Resolve { accusation_id: accusation },
+    )
+    assert!(verdict == 1)
+    evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::Revise {
+            round_id: ROUND,
+            clients: [agents[0], agents[1], agents[2], Address::zero()],
+            c0: [1, 2, 1, 0],
+            c1: [2, 2, 1, 0],
+            c2: [3, 3, 3, 0],
+            c3: [4, 4, 5, 0],
+            count: 3,
+        },
+    )
+    let phase: u8 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::PhaseOf { round_id: ROUND },
+    )
+    assert!(phase == 3)
+    let revised: u256 = evm.call(
+        addr: reg,
+        gas: GAS,
+        value: Wei::zero(),
+        message: FlMsg::AvgCommitment { round_id: ROUND },
+    )
+    assert!(revised == fedavg([coords_a(), coords_b(), coords_c(), coords_a()], 3).avg_commitment)
+    assert!(evm.balance(reg) == wei(3750))
+}

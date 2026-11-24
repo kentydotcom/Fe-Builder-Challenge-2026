@@ -1,0 +1,8 @@
+# Compiler pin: Fe 26.5.0 (commit 3dab95f).
+# The manifest schema has no toolchain field; 26.5.0 ignores unknown keys.
+# scripts/e2e.sh refuses to run unless `fe --version` reports 26.5.0.
+# Install: curl -fsSL https://raw.githubusercontent.com/argotorg/fe/master/feup/feup.sh | bash -s -- --version v26.5.0
+
+[ingot]
+name = "fl_coord"
+version = "0.1.0"

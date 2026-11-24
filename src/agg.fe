@@ -1,0 +1,289 @@
+// Pure federated-average math and receipt commitments.
+//
+// No model weights are stored here. A receipt commits to a length-4 vector of
+// i64 coordinates (a stand-in for one client's update) plus the public L1 norm
+// used by the poison rule. Keccak-256 is the on-chain hash, via `keccak_words`,
+// which is the ABI encoding of the words.
+
+use core::num::{IntDowncast, IntWord, UnsignedAbs}
+use std::evm::keccak_words
+
+/// Domain separator so a receipt hash cannot be reused as a FedAvg commitment.
+pub const FL_DOMAIN: u256 = 0x666c2d636f6f7264
+
+/// A client is an outlier when |score - median| is strictly greater than this.
+pub const OUTLIER_BOUND: u256 = 20
+
+/// Demo cap. The attest ABI uses fixed arrays of this length.
+pub const MAX_CLIENTS: usize = 4
+
+/// Quorum: at least this many peer support votes, and more support stake than oppose stake.
+pub const MIN_VOTES: u256 = 1
+
+/// One simulated client update. Four coordinates keep the demo readable.
+pub struct Coords {
+    pub c0: i64,
+    pub c1: i64,
+    pub c2: i64,
+    pub c3: i64,
+}
+
+impl Copy for Coords {}
+
+/// Anything that can be committed as a keccak word-string.
+pub trait Commitment {
+    fn commit(self) -> u256
+}
+
+impl Commitment for Coords {
+    fn commit(self) -> u256 {
+        keccak_words([
+            IntWord::to_word(self.c0),
+            IntWord::to_word(self.c1),
+            IntWord::to_word(self.c2),
+            IntWord::to_word(self.c3),
+        ])
+    }
+}
+
+/// Fixed-length word vector. `N > 0` is rejected at compile time for `N = 0`.
+pub struct WordVec<const N: usize> where N > 0 {
+    pub words: [u256; N],
+}
+
+impl<const N: usize> WordVec<N> {
+    /// Sum with a closure. Closures are a Fe 26.5 feature.
+    pub fn sum(self) -> u256 {
+        self.words.fold(0, |acc: own u256, word: u256| -> u256 { acc + word })
+    }
+}
+
+/// Public L1 norm. This is the only numeric statistic stored beside the hash.
+pub fn l1(_ coords: Coords) -> u256 {
+    let m0: u64 = coords.c0.unsigned_abs()
+    let m1: u64 = coords.c1.unsigned_abs()
+    let m2: u64 = coords.c2.unsigned_abs()
+    let m3: u64 = coords.c3.unsigned_abs()
+    IntWord::to_word(m0) + IntWord::to_word(m1) + IntWord::to_word(m2) + IntWord::to_word(m3)
+}
+
+/// Commitment to (domain, round, client, score, coordinates).
+/// Changing any coordinate, the score, the round, or the client changes the hash.
+pub fn hash_update(_ round_id: u256, _ client: u256, _ coords: Coords) -> u256 {
+    keccak_words([
+        FL_DOMAIN,
+        round_id,
+        client,
+        l1(coords),
+        IntWord::to_word(coords.c0),
+        IntWord::to_word(coords.c1),
+        IntWord::to_word(coords.c2),
+        IntWord::to_word(coords.c3),
+    ])
+}
+
+pub struct Average {
+    pub sum0: i256,
+    pub sum1: i256,
+    pub sum2: i256,
+    pub sum3: i256,
+    pub avg0: i64,
+    pub avg1: i64,
+    pub avg2: i64,
+    pub avg3: i64,
+    pub count: u256,
+    pub sum_commitment: u256,
+    pub avg_commitment: u256,
+}
+
+impl Copy for Average {}
+
+fn mean_coord(_ sum: i256, _ count: u256) -> i64 {
+    let narrowed: Option<i256> = IntWord::to_word(count).downcast()
+    let divisor = match narrowed {
+        Option::Some(value) => value,
+        Option::None => 0,
+    }
+    if divisor == 0 {
+        return 0
+    }
+    let avg = sum / divisor
+    let narrowed_avg: Option<i64> = avg.downcast()
+    match narrowed_avg {
+        Option::Some(value) => value,
+        Option::None => 0,
+    }
+}
+
+/// Integer FedAvg over the first `count` rows. Division truncates toward zero.
+/// `count` must be in 1..=4. The tail of `rows` is ignored.
+pub fn fedavg(_ rows: [Coords; 4], _ count: usize) -> Average {
+    var sum0: i256 = 0
+    var sum1: i256 = 0
+    var sum2: i256 = 0
+    var sum3: i256 = 0
+    var index: usize = 0
+    while index < count {
+        sum0 = sum0 + (rows[index].c0 as i256)
+        sum1 = sum1 + (rows[index].c1 as i256)
+        sum2 = sum2 + (rows[index].c2 as i256)
+        sum3 = sum3 + (rows[index].c3 as i256)
+        index = index + 1
+    }
+    let n = IntWord::to_word(count)
+    let avg0 = mean_coord(sum0, n)
+    let avg1 = mean_coord(sum1, n)
+    let avg2 = mean_coord(sum2, n)
+    let avg3 = mean_coord(sum3, n)
+    Average {
+        sum0,
+        sum1,
+        sum2,
+        sum3,
+        avg0,
+        avg1,
+        avg2,
+        avg3,
+        count: n,
+        sum_commitment: keccak_words([
+            IntWord::to_word(sum0),
+            IntWord::to_word(sum1),
+            IntWord::to_word(sum2),
+            IntWord::to_word(sum3),
+        ]),
+        avg_commitment: keccak_words([
+            IntWord::to_word(avg0),
+            IntWord::to_word(avg1),
+            IntWord::to_word(avg2),
+            IntWord::to_word(avg3),
+        ]),
+    }
+}
+
+fn sort_prefix(_ xs: mut [u256; 4], _ count: usize) {
+    var index: usize = 1
+    while index < count {
+        let key = xs[index]
+        var cursor = index
+        while cursor > 0 {
+            if xs[cursor - 1] <= key {
+                break
+            }
+            xs[cursor] = xs[cursor - 1]
+            cursor = cursor - 1
+        }
+        xs[cursor] = key
+        index = index + 1
+    }
+}
+
+/// Lower median of the first `count` scores: sorted index `(count - 1) / 2`.
+pub fn median(_ scores: [u256; 4], _ count: usize) -> u256 {
+    var sorted = scores
+    sort_prefix(mut sorted, count)
+    let index = (count - 1) / 2
+    sorted[index]
+}
+
+pub fn is_outlier(_ score: u256, _ median_score: u256) -> bool {
+    let distance = if score > median_score { score - median_score } else { median_score - score }
+    distance > OUTLIER_BOUND
+}
+
+/// Keccak of (count, sorted client words, zero tail). Address 0 is not a client.
+pub fn participant_commitment(_ words: [u256; 4], _ count: usize) -> u256 {
+    var sorted = words
+    sort_prefix(mut sorted, count)
+    var index = count
+    while index < 4 {
+        sorted[index] = 0
+        index = index + 1
+    }
+    keccak_words([IntWord::to_word(count), sorted[0], sorted[1], sorted[2], sorted[3]])
+}
+
+pub fn zero_coords() -> Coords {
+    Coords { c0: 0, c1: 0, c2: 0, c3: 0 }
+}
+
+#[test]
+fn test_unit_l1_and_hash() {
+    let coords = Coords { c0: 1, c1: -2, c2: 3, c3: -4 }
+    assert!(l1(coords) == 10)
+    assert!(coords.commit() != 0)
+    let left = hash_update(round_id: 1, client: 9, coords)
+    let right = hash_update(round_id: 1, client: 9, coords)
+    let changed = hash_update(round_id: 1, client: 9, coords: Coords { c0: 1, c1: -2, c2: 3, c3: -5 })
+    let other_client = hash_update(round_id: 1, client: 10, coords)
+    assert!(left == right)
+    assert!(left != changed)
+    assert!(left != other_client)
+}
+
+#[test]
+fn test_unit_wordvec_fold() {
+    let vector = WordVec<4> { words: [1, 2, 3, 4] }
+    assert!(vector.sum() == 10)
+}
+
+#[test]
+fn test_unit_fedavg_truncates_toward_zero() {
+    let rows = [
+        Coords { c0: 1, c1: 2, c2: 3, c3: 4 },
+        Coords { c0: 2, c1: 2, c2: 3, c3: 4 },
+        Coords { c0: 1, c1: 1, c2: 3, c3: 5 },
+        Coords { c0: 40, c1: 40, c2: 40, c3: 40 },
+    ]
+    let all = fedavg(rows, 4)
+    assert!(all.sum0 == 44)
+    assert!(all.sum1 == 45)
+    assert!(all.sum2 == 49)
+    assert!(all.sum3 == 53)
+    assert!(all.avg0 == 11)
+    assert!(all.avg1 == 11)
+    assert!(all.avg2 == 12)
+    assert!(all.avg3 == 13)
+
+    let honest = fedavg(rows, 3)
+    assert!(honest.sum0 == 4)
+    assert!(honest.avg0 == 1)
+    assert!(honest.avg1 == 1)
+    assert!(honest.avg2 == 3)
+    assert!(honest.avg3 == 4)
+    assert!(all.avg_commitment != honest.avg_commitment)
+}
+
+#[test]
+fn test_unit_fedavg_negative() {
+    let rows = [
+        Coords { c0: -4, c1: -4, c2: 0, c3: 0 },
+        Coords { c0: 2, c1: 0, c2: 0, c3: 0 },
+        zero_coords(),
+        zero_coords(),
+    ]
+    let average = fedavg(rows, 2)
+    assert!(average.sum0 == -2)
+    assert!(average.sum1 == -4)
+    assert!(average.avg0 == -1)
+    assert!(average.avg1 == -2)
+    assert!(average.avg2 == 0)
+}
+
+#[test]
+fn test_unit_median_and_outlier() {
+    let scores: [u256; 4] = [10, 160, 11, 10]
+    assert!(median(scores, 4) == 10)
+    assert!(is_outlier(score: 160, median_score: 10))
+    assert!(!is_outlier(score: 11, median_score: 10))
+    assert!(median(scores: [5, 0, 0, 0], count: 1) == 5)
+    assert!(!is_outlier(score: 5, median_score: 5))
+}
+
+#[test]
+fn test_unit_participant_commitment_sorts() {
+    let up = participant_commitment(words: [1, 3, 2, 0], count: 3)
+    let down = participant_commitment(words: [3, 2, 1, 9], count: 3)
+    assert!(up == down)
+    let shorter = participant_commitment(words: [1, 2, 3, 0], count: 2)
+    assert!(up != shorter)
+}

@@ -1,0 +1,62 @@
+# Build and local run output
+out/
+logs/
+target/
+agent-tools/
+cache/
+broadcast/
+*.tar.gz
+*.pid
+.anvil.pid
+
+# Secrets and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+id_ecdsa*
+id_dsa*
+*.keystore
+*.jks
+*.wallet
+UTC--*
+.secret
+.secrets
+secrets/
+credentials*
+*credentials*
+*token*.json
+.npmrc
+.pypirc
+.netrc
+.pgpass
+*.kdbx
+
+# Gate / local deploy secrets
+GATE_PASSWORD
+GATE_PASSWORD.*
+gate_password
+gate_password.*
+.fly/
+
+# Editor and OS junk
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+.idea/
+.vscode/
+*.iml
+.cursor/
+
+# Local tool caches
+__pycache__/
+*.pyc
+.venv/
+venv/

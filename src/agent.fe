@@ -1,0 +1,76 @@
+// Test-only forwarder. `fe test` sends every call from one address, so each
+// simulated client is its own contract. On Anvil the same registry calls are
+// made by ordinary funded accounts; Agent is not part of that path.
+//
+// The payable fallback accepts stake refunds and slash bounties.
+
+use super::FlMsg
+use std::abi::sol
+
+pub msg AgentMsg {
+    #[selector = sol("register(uint256)")]
+    Register { pubkey: u256 },
+
+    #[selector = sol("submitReceipt(uint256,uint256,uint256)")]
+    Submit { round_id: u256, update_hash: u256, score: u256 },
+
+    #[selector = sol("accuse(uint256,address)")]
+    Accuse { round_id: u256, accused: Address } -> u256,
+
+    #[selector = sol("vote(uint256,bool)")]
+    Vote { accusation_id: u256, support: bool },
+}
+
+pub contract Agent uses (ctx: Ctx, call: mut Call) {
+    mut registry: Address,
+
+    init(registry_addr: Address) uses (mut registry) {
+        registry = registry_addr
+    }
+
+    recv AgentMsg {
+        #[payable]
+        Register { pubkey } uses (registry, ctx, mut call) {
+            call.call(
+                addr: registry,
+                gas: 1500000,
+                value: ctx.value(),
+                message: FlMsg::Register { pubkey },
+            )
+        }
+
+        Submit { round_id, update_hash, score } uses (registry, mut call) {
+            call.call(
+                addr: registry,
+                gas: 1500000,
+                value: Wei::zero(),
+                message: FlMsg::SubmitReceipt { round_id, update_hash, score },
+            )
+        }
+
+        #[payable]
+        Accuse { round_id, accused } -> u256 uses (registry, ctx, mut call) {
+            call.call(
+                addr: registry,
+                gas: 1500000,
+                value: ctx.value(),
+                message: FlMsg::Accuse { round_id, accused },
+            )
+        }
+
+        #[payable]
+        Vote { accusation_id, support } uses (registry, ctx, mut call) {
+            call.call(
+                addr: registry,
+                gas: 1500000,
+                value: ctx.value(),
+                message: FlMsg::Vote { accusation_id, support },
+            )
+        }
+    }
+
+    recv {
+        #[payable]
+        _ {}
+    }
+}
