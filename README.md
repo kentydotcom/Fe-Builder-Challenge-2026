@@ -13,7 +13,7 @@ This is a Fe Builders Challenge prototype ([contest page](https://fe-lang.org/co
 | Fe | **26.5.0** (`3dab95f`), the contest minimum |
 | License | MIT, Copyright 2026 Kent G Lau, PhD |
 | Status | Exploratory prototype first written on 2026-10-28, before the judged window. Reconstructed and re-verified during the window. No new Fe protocol features were added after the 28 October scaffold. |
-| Submission commit | **TBD** — paste the full SHA here after the first commit. |
+| Submission commit | `3a3eca35c07286a0d68a8a5f8116dd2fce9b49b0` |
 
 Fe 26.x is **not production-ready**. The Fe project says so, and this repo does not pretend otherwise. The contracts are a demo with tests, not a system to deploy with real money.
 

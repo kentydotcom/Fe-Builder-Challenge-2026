@@ -117,6 +117,6 @@ MIT. Copyright 2026 Kent G Lau, PhD. See [LICENSE](LICENSE).
 
 ## Submission commit
 
-**Full commit SHA:** TBD.
+**Full commit SHA:** `3a3eca35c07286a0d68a8a5f8116dd2fce9b49b0`.
 
 If any later documentation-only commits are added on top of this tree, the form should use the tip of `main` at submission time (`git rev-parse HEAD`), not only the SHA above.
