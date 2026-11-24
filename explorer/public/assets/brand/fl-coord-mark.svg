@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Checkable Coordinator">
+  <defs>
+    <linearGradient id="cc-gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fff0c8"/>
+      <stop offset="28%" stop-color="#d5af64"/>
+      <stop offset="62%" stop-color="#8b642c"/>
+      <stop offset="100%" stop-color="#e5c47c"/>
+    </linearGradient>
+    <linearGradient id="cc-mahogany" x1="0.25" y1="0" x2="0.85" y2="1">
+      <stop offset="0%" stop-color="#722f36"/>
+      <stop offset="55%" stop-color="#4b1f26"/>
+      <stop offset="100%" stop-color="#2d1219"/>
+    </linearGradient>
+    <linearGradient id="cc-cream" x1="0" y1="0" x2="0.2" y2="1">
+      <stop offset="0%" stop-color="#fff8ec"/>
+      <stop offset="100%" stop-color="#f2eadc"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ReceiptGate nucleus disc: mahogany field, gold ring -->
+  <circle cx="64" cy="64" r="60" fill="url(#cc-mahogany)" stroke="url(#cc-gold)" stroke-width="5"/>
+  <circle cx="64" cy="64" r="52.5" fill="none" stroke="#d5af64" stroke-opacity=".35" stroke-width="1.25"/>
+
+  <!-- Receipt glyph (from ReceiptGate icon-receipt), plus verify check -->
+  <g transform="translate(64 64) scale(.82) translate(-64 -64)">
+    <!-- 3D extrusion, same idiom as the ReceiptGate night icons -->
+    <g transform="translate(2.2 3.2)" opacity=".32">
+      <path d="M39 25h50v78l-8-6-8 6-9-6-9 6-8-6-8 6z" fill="#8b642c"/>
+    </g>
+    <path d="M39 25h50v78l-8-6-8 6-9-6-9 6-8-6-8 6z" fill="url(#cc-cream)" stroke="url(#cc-gold)" stroke-width="3" stroke-linejoin="round"/>
+    <!-- Leave the lower receipt clear for the check; two short lines only -->
+    <path d="M49 44h30M49 56h22" fill="none" stroke="#2d1219" stroke-width="5" stroke-linecap="round"/>
+    <path d="M48 78l13 13 26-30" fill="none" stroke="url(#cc-gold)" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 220" role="img" aria-label="The vector stays off-chain. On-chain stores only the hash and the L1 score. Clients register, a round opens, then they submit.">
+
+  <defs>
+    <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#8a7248" stroke-width="1.1" stroke-opacity="0.55"/>
+    </pattern>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#c4a574"/>
+    </marker>
+    <marker id="arr-bright" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#e0c894"/>
+    </marker>
+  </defs>
+
+  <text x="150" y="28" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">Off-chain</text>
+  <rect x="16" y="40" width="268" height="160" rx="14" fill="#1a1512" stroke="#3d3229" stroke-width="1.5"/>
+  
+  <rect x="54.0" y="80.0" width="52" height="40" rx="8" fill="#221c18" stroke="url(#brass)" stroke-width="1.6"/>
+  <text x="80" y="105" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">A</text>
+  <rect x="150" y="78" width="110" height="64" rx="8" fill="#2a221c" stroke="#8a7248" stroke-width="1.4"/>
+  <text x="205" y="104" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">(1, 2, 3, 4)</text>
+  <text x="205" y="124" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">Vector stays here</text>
+  <path d="M284 120 H330" stroke="#c4a574" stroke-width="1.6" marker-end="url(#arr-bright)"/>
+  <text x="308" y="110" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">hash only</text>
+
+  <text x="560" y="28" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">On-chain</text>
+  <rect x="338" y="40" width="506" height="160" rx="14" fill="#1a1512" stroke="url(#brass)" stroke-width="1.7"/>
+  <!-- register / open / submit -->
+  <rect x="358" y="62" width="120" height="70" rx="8" fill="#221c18" stroke="#c4a574" stroke-width="1.4"/>
+  <text x="418" y="92" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">Register</text>
+  <text x="418" y="112" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">Stake + key</text>
+  <path d="M478 96 H508" stroke="#c4a574" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="512" y="62" width="120" height="70" rx="8" fill="#221c18" stroke="#c4a574" stroke-width="1.4"/>
+  <text x="572" y="92" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">Open</text>
+  <text x="572" y="112" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">Round 7</text>
+  <path d="M632 96 H662" stroke="#c4a574" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="666" y="62" width="156" height="70" rx="8" fill="#2a221c" stroke="#e0c894" stroke-width="1.5"/>
+  <text x="744" y="88" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">Submit</text>
+  <text x="744" y="108" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">hash + L1 score</text>
+  <text x="591" y="160" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#a89888" text-anchor="middle">Storage keeps the hash and the score — not the four coordinates</text>
+  <text x="744" y="180" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle">L1 = 10</text>
+</svg>

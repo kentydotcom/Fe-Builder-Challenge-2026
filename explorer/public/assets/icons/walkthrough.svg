@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Walkthrough">
+
+  <defs>
+    <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <linearGradient id="ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1714"/>
+      <stop offset="100%" stop-color="#0a0807"/>
+    </linearGradient>
+  </defs>
+
+
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#ink)" stroke="url(#brass)" stroke-width="1.75"/>
+  <rect x="7" y="7" width="50" height="50" rx="10" fill="none" stroke="#c4a574" stroke-opacity="0.35" stroke-width="0.75"/>
+
+
+  <path d="M20 44 V22 C20 20 22 18 25 18 H32 V44 Z" stroke="url(#brass)" stroke-width="1.7" stroke-linejoin="round"/>
+  <path d="M44 44 V22 C44 20 42 18 39 18 H32 V44 Z" stroke="url(#brass)" stroke-width="1.7" stroke-linejoin="round"/>
+  <path d="M24 24 H29 M24 29 H29 M35 24 H40 M35 29 H40" stroke="#e0c894" stroke-width="1.25" stroke-linecap="round"/>
+
+</svg>

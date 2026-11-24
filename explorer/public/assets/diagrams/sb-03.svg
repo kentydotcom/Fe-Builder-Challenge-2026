@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 168" role="img" aria-label="No receipt, a poisoned update can skew the average, and a false charge is free.">
+
+  <defs>
+    <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#8a7248" stroke-width="1.1" stroke-opacity="0.55"/>
+    </pattern>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#c4a574"/>
+    </marker>
+    <marker id="arr-bright" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#e0c894"/>
+    </marker>
+  </defs>
+
+  <!-- three clear pictograms -->
+  <!-- no receipt -->
+  <rect x="16" y="28" width="100" height="110" rx="10" fill="#1a1512" stroke="#3d3229" stroke-width="1.4"/>
+  <rect x="44" y="44" width="44" height="56" rx="5" fill="#221c18" stroke="#c4a574" stroke-width="1.5"/>
+  <path d="M52 60 H80 M52 72 H80 M52 84 H70" stroke="#8a7248" stroke-width="1.4" stroke-linecap="round"/>
+  <path d="M40 48 L92 96 M92 48 L40 96" stroke="#e0c894" stroke-width="2.1" stroke-linecap="round"/>
+  <text x="66" y="122" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#a89888" text-anchor="middle">No receipt</text>
+
+  <!-- poison skew -->
+  <rect x="130" y="28" width="100" height="110" rx="10" fill="#1a1512" stroke="#3d3229" stroke-width="1.4"/>
+  <path d="M146 96 H214" stroke="#6f6256" stroke-width="1.2"/>
+  <path d="M152 96 L164 88 L176 90 L188 86" stroke="#c4a574" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M188 86 L210 46" stroke="#e0c894" stroke-width="2.4" stroke-linecap="round"/>
+  <circle cx="210" cy="46" r="7" fill="#2a221c" stroke="#e0c894" stroke-width="1.4"/>
+  <text x="210" y="50" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#f3ebe0" text-anchor="middle" font-weight="600">D</text>
+  <text x="180" y="122" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#a89888" text-anchor="middle">Poison skews it</text>
+
+  <!-- false charge is free -->
+  <rect x="244" y="28" width="100" height="110" rx="10" fill="#1a1512" stroke="#3d3229" stroke-width="1.4"/>
+  <circle cx="294" cy="72" r="18" fill="#221c18" stroke="#8a7248" stroke-width="1.5" stroke-dasharray="3.5 3"/>
+  <text x="294" y="76" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="16" fill="#a89888" text-anchor="middle">0</text>
+  <path d="M282 58 L306 86" stroke="#e0c894" stroke-width="1.8" stroke-linecap="round"/>
+  <text x="294" y="122" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#a89888" text-anchor="middle">False charge is free</text>
+</svg>

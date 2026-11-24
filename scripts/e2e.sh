@@ -4,7 +4,8 @@
 # This is the script a judge (or Kent) runs. It does not train a model. It
 # builds the Fe ingot, runs the in-EVM tests chapter by chapter, then deploys
 # the same contract to a local Anvil node and repeats the story with four
-# accounts.
+# accounts. The last stage is teardown: it confirms the local Anvil is gone
+# and removes leftover pid or temp files, and it does not delete tour logs.
 #
 # Each stage is a separate process: its own log, its own pass/fail, its own
 # timing. A failure in one stage does not stop the later stages. The script
@@ -14,7 +15,7 @@
 #   ./scripts/e2e.sh           interactive menu (or run-all if stdin is not a tty)
 #   ./scripts/e2e.sh --ci      run every stage, no prompts
 #   ./scripts/e2e.sh --all     same as --ci
-#   ./scripts/e2e.sh --stage N run one stage (1..7)
+#   ./scripts/e2e.sh --stage N run one stage (1..8)
 #   ./scripts/e2e.sh --help
 #
 # Stages:
@@ -25,6 +26,8 @@
 #   5  chapter 2    aggregator-free FedAvg attestation
 #   6  chapter 3    poison vote, slash, revise
 #   7  tour         full in-EVM story plus the Anvil deployment
+#   8  teardown     last step: stop leftover Anvil, remove pid/temp files,
+#                   keep logs/e2e-* for this run
 
 set -u
 
@@ -127,6 +130,112 @@ stage_tour() {
   ./scripts/anvil_tour.sh
 }
 
+# True if something accepts a TCP connection on 127.0.0.1:$1.
+_port_in_use() {
+  python3 - "$1" <<'PORTCHECK'
+import socket, sys
+port = int(sys.argv[1])
+s = socket.socket()
+s.settimeout(0.3)
+try:
+    r = s.connect_ex(("127.0.0.1", port))
+finally:
+    s.close()
+sys.exit(0 if r == 0 else 1)
+PORTCHECK
+}
+
+# Stop a leftover Anvil we started for this tour. No-op if nothing is running.
+# Never deletes logs/e2e-* (including the current run). Never kills a node the
+# caller asked us to reuse via ANVIL_RPC.
+stage_teardown() {
+  local port="${ANVIL_PORT:-18545}"
+  local pidfile="${ROOT}/.anvil.pid"
+  local tmp_log="/tmp/fl-anvil.log"
+  local pid cmd leftover
+
+  echo "teardown: checking port ${port} and pidfile ${pidfile}"
+  echo "logs for this run stay in ${LOG_DIR} (not deleted)"
+
+  if [[ -n "${ANVIL_RPC:-}" ]]; then
+    echo "ANVIL_RPC=${ANVIL_RPC}; not stopping a reused node"
+  fi
+
+  if [[ -f "$pidfile" ]]; then
+    pid="$(tr -d '[:space:]' < "$pidfile" || true)"
+    echo "found pidfile, pid='${pid}'"
+    if [[ -n "$pid" && "$pid" =~ ^[0-9]+$ ]] && kill -0 "$pid" 2>/dev/null; then
+      cmd="$(ps -p "$pid" -o args= 2>/dev/null || true)"
+      echo "process still running: ${cmd}"
+      if [[ -z "${ANVIL_RPC:-}" ]]; then
+        kill "$pid" 2>/dev/null || true
+        sleep 0.2
+        if kill -0 "$pid" 2>/dev/null; then
+          echo "escalating to SIGKILL on ${pid}"
+          kill -9 "$pid" 2>/dev/null || true
+          sleep 0.1
+        fi
+      else
+        echo "leaving reused node pid ${pid} alone"
+      fi
+    else
+      echo "pidfile is stale (process not running)"
+    fi
+    rm -f "$pidfile"
+    echo "removed ${pidfile}"
+  else
+    echo "no pidfile (anvil_tour usually removes it on exit)"
+  fi
+
+  if [[ -z "${ANVIL_RPC:-}" ]]; then
+    leftover="$(pgrep -af "anvil --host 127.0.0.1 --port ${port}" 2>/dev/null || true)"
+    if [[ -n "$leftover" ]]; then
+      echo "leftover anvil still running:"
+      echo "$leftover"
+      while read -r lp rest; do
+        [[ -z "${lp:-}" ]] && continue
+        [[ "$lp" =~ ^[0-9]+$ ]] || continue
+        echo "stopping leftover anvil pid ${lp}"
+        kill "$lp" 2>/dev/null || true
+        sleep 0.2
+        if kill -0 "$lp" 2>/dev/null; then
+          kill -9 "$lp" 2>/dev/null || true
+          sleep 0.1
+        fi
+      done <<< "$leftover"
+    else
+      echo "no leftover anvil process on port ${port}"
+    fi
+  fi
+
+  if [[ -f "$tmp_log" ]]; then
+    rm -f "$tmp_log"
+    echo "removed ${tmp_log}"
+  else
+    echo "no ${tmp_log}"
+  fi
+
+  if [[ -f "$pidfile" ]]; then
+    echo "FAIL: ${pidfile} still exists"
+    return 1
+  fi
+
+  if [[ -z "${ANVIL_RPC:-}" ]] && _port_in_use "$port"; then
+    echo "FAIL: something still listens on 127.0.0.1:${port}"
+    return 1
+  fi
+  if [[ -z "${ANVIL_RPC:-}" ]]; then
+    echo "port ${port} is free"
+  fi
+
+  if [[ ! -d "$LOG_DIR" ]]; then
+    echo "FAIL: current log dir ${LOG_DIR} is missing"
+    return 1
+  fi
+  echo "current run logs still in ${LOG_DIR}"
+  echo "teardown clean"
+}
+
 print_summary() {
   echo
   echo "Checkable Coordinator summary  (logs in ${LOG_DIR})"
@@ -161,6 +270,7 @@ run_all() {
   run_stage chapter2 "FedAvg attestation" stage_chapter2
   run_stage chapter3 "poison vote, slash, revise" stage_chapter3
   run_stage tour "in-EVM tour plus Anvil deployment" stage_tour
+  run_stage teardown "stop leftover Anvil; keep logs" stage_teardown
   print_summary
 }
 
@@ -174,6 +284,7 @@ run_one() {
     5) run_stage chapter2 "FedAvg attestation" stage_chapter2 ;;
     6) run_stage chapter3 "poison vote, slash, revise" stage_chapter3 ;;
     7) run_stage tour "in-EVM tour plus Anvil deployment" stage_tour ;;
+    8) run_stage teardown "stop leftover Anvil; keep logs" stage_teardown ;;
     *)
       echo "unknown stage: $1" >&2
       return 2
@@ -188,9 +299,10 @@ Usage: ./scripts/e2e.sh [--ci | --all | --stage N | --help]
 
   (no args, terminal)   menu
   (no args, no tty)     run every stage
-  --ci, --all           run every stage
+  --ci, --all           run every stage, ending with teardown
   --stage N             run stage N only (1 toolchain, 2 build, 3 unit,
-                        4 chapter 1, 5 chapter 2, 6 chapter 3, 7 full tour)
+                        4 chapter 1, 5 chapter 2, 6 chapter 3, 7 full tour,
+                        8 teardown)
 
 Exit 0 only when every requested stage passes.
 EOF
@@ -208,7 +320,8 @@ Checkable Coordinator
   5  chapter 2 — FedAvg attest
   6  chapter 3 — poison vote and slash
   7  full tour (in-EVM test + Anvil)
-  8  run all
+  8  teardown (stop leftover Anvil, keep logs)
+  9  run all
   q  quit
 EOF
     printf 'choice> '
@@ -218,10 +331,10 @@ EOF
       return 0
     fi
     case "$choice" in
-      1|2|3|4|5|6|7) run_one "$choice" ;;
-      8|a|all) run_all ;;
+      1|2|3|4|5|6|7|8) run_one "$choice" ;;
+      9|a|all) run_all ;;
       q|Q) return 0 ;;
-      *) echo "enter 1-8 or q" ;;
+      *) echo "enter 1-9 or q" ;;
     esac
   done
 }

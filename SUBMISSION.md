@@ -43,8 +43,9 @@ That split is the point of Fe's effect system: the books and the side effects ar
 - `src/events.fe`, `src/errors.fe` — event and error types.
 - `src/agent.fe` — test-only forwarder, because `fe test` sends every call from the test contract. On Anvil, ordinary accounts call `FlRegistry` directly.
 - `src/tests.fe` — chapter tests and the full in-EVM tour.
-- `scripts/e2e.sh` — menu and `--ci` driver (seven stages).
+- `scripts/e2e.sh` — menu and `--ci` driver (eight stages, teardown last).
 - `scripts/anvil_tour.sh` — the same story on a local Anvil node (Osaka hardfork).
+- `explorer/` — static Judge Tour site, live at https://fe-fl-kent-private.fly.dev/.
 
 `attest` takes opened vectors in calldata, rejects a bad hash or score, and writes commitments plus the median score. `resolve` runs `slash::settle`: a non-outlier slashes the accuser; an outlier without quorum returns the bond; an outlier with quorum slashes the accused stake, pays half of the slash to the accuser, and keeps half as treasury. Vote bonds are always returned. `revise` recomputes FedAvg from the non-poisoned receipts. ETH payouts use `call.send_value` after storage is updated, so a failed transfer reverts the whole resolution.
 
@@ -64,7 +65,7 @@ curl -fsSL https://raw.githubusercontent.com/argotorg/fe/master/feup/feup.sh | b
 source ~/.fe/env
 ```
 
-The Anvil chapter also needs Foundry (`anvil` and `cast`). Fe 26.5 targets the Osaka hardfork; the tour script starts `anvil --hardfork osaka`. This tree was re-verified on 2026-11-23 with Foundry 1.8.4. See the project [README.md](README.md) and [WALKTHROUGH.md](WALKTHROUGH.md) for a fuller setup.
+The Anvil chapter also needs Foundry (`anvil` and `cast`). Fe 26.5 targets the Osaka hardfork; the tour script starts `anvil --hardfork osaka`. This tree was re-verified on 2026-11-23 and again on 2026-11-24 with Foundry 1.8.4. See the project [README.md](README.md) and [WALKTHROUGH.md](WALKTHROUGH.md) for a fuller setup.
 
 Project manifest: `fe.toml` (ingot name `fl_coord`, version `0.1.0`). The manifest schema has no toolchain field; `scripts/e2e.sh` refuses to run unless `fe --version` reports 26.5.0.
 
@@ -76,11 +77,11 @@ A reproducible CLI example:
 ./scripts/e2e.sh --ci
 ```
 
-Expected result: seven stages pass (toolchain, build, unit tests, chapter 1 receipts, chapter 2 FedAvg attest, chapter 3 poison vote and slash, full in-EVM tour plus Anvil). `./scripts/anvil_tour.sh` after `fe build` is the Anvil chapter alone. It uses Anvil's published development keys on a local node only.
+Expected result: eight stages pass (toolchain, build, unit tests, chapter 1 receipts, chapter 2 FedAvg attest, chapter 3 poison vote and slash, full in-EVM tour plus Anvil, and teardown last). `./scripts/anvil_tour.sh` after `fe build` is the Anvil chapter alone. It uses Anvil's published development keys on a local node only. See the README demo for the step-by-step.
 
-On 2026-11-23 this tree produced `fe test --jobs 1`: 20 passed, 0 failed; `./scripts/e2e.sh --ci`: 7 stages passed, 0 failed.
+On 2026-11-24 this tree produced `fe test --jobs 1`: 20 passed, 0 failed; `./scripts/e2e.sh --ci`: 8 stages passed, 0 failed, with teardown last.
 
-There is no video and no hosted frontend in this repository.
+A hosted Judge Tour explorer is at https://fe-fl-kent-private.fly.dev/. It is ungated. It is a static walkthrough of the same eight-stage tour; Fe is not executed there. Source for that site is in [`explorer/`](explorer/). There is no video.
 
 ## Limitations
 
@@ -90,7 +91,7 @@ There is no video and no hosted frontend in this repository.
 - The outlier rule is `|score - lower median| > 20`. It is deterministic and tested, not a robust statistic for real gradients.
 - One accusation per accused client per round.
 - The native Fe backend is experimental and is not used. The contract path is what `fe test` and Anvil run.
-- No mainnet or testnet deploy, and no frontend in this repository.
+- No mainnet or testnet deploy. The hosted explorer at https://fe-fl-kent-private.fly.dev/ is a static walkthrough; it does not run Fe.
 - Ideas sketched after the 28 October scaffold (a higher client cap, committing the L1 norm until a challenge, a second round with carried stake, gas notes on `attest`) were not implemented.
 
 Fe 26.x is not production-ready. Do not deploy this with real money.
@@ -100,6 +101,8 @@ Fe 26.x is not production-ready. Do not deploy this with real money.
 - **Pre-existing work:** The Fe contracts (`src/*.fe`), tests, `scripts/e2e.sh`, `scripts/anvil_tour.sh`, and the original walkthrough were written on 2026-10-28, before the judged window opened on 3 November 2026 00:00 UTC, as an exploratory prototype in a Cursor cloud agent (id `bc-12e4d95b-18fd-5153-9343-4b92563a04ed`). That work was not published to GitHub. There was no prior Fe codebase, and nothing here was forked from another contest entry. The only Fe code that is not original to this repository is the language and `std` that ship with the Fe 26.5.0 compiler.
 
   On 2026-11-11 (Asia/Hong_Kong), the tree was reconstructed onto a local workstation from that agent's applied diffs, including a compile fix for unlabeled internal parameters that had already been part of the 28 October draft. The reconstruction was re-verified with Fe 26.5.0. No new Fe protocol features (for example a weighted FedAvg digest, or parameterized quorum and challenge-evidence work that had been sketched as a possible window delta) were added to the contracts after the 28 October scaffold. Product naming as Checkable Coordinator, the MIT license file, and documentation cleanup also date from that reconstruction.
+
+  Documentation updates, teardown as e2e stage 8, and the static Judge Tour explorer were prepared during the judged window. They do not add Fe protocol features beyond the 28 October scaffold.
 
   The jury should treat the 28 October scaffold as the starting point and score only substantial work completed between 3 November 2026 00:00 UTC and 24 November 2026 23:59 UTC.
 

@@ -1,0 +1,2391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#120e0c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Coordinator">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Checkable Coordinator — Judge Tour</title>
+  <link rel="icon" href="assets/brand/checkable-coordinator-mark.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#panel-overview">Skip to content</a>
+  <div class="haze" aria-hidden="true"></div>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#overview"><img class="brand-mark" src="assets/brand/checkable-coordinator-mark.svg" alt="Checkable Coordinator">Checkable Coordinator <span>Judge Tour</span></a>
+      <p class="header-meta meta">Judge Tour explorer · Fe 26.5.0</p>
+    </div>
+    <div class="tabs-wrap">
+    <div class="tabs" role="tablist" aria-label="Tour chapters">
+      <button type="button" role="tab" id="tab-overview" data-tab="overview" aria-controls="panel-overview" aria-selected="true">Overview</button>
+      <button type="button" role="tab" id="tab-problem" data-tab="problem" aria-controls="panel-problem" aria-selected="false">Problem</button>
+      <button type="button" role="tab" id="tab-receipts" data-tab="receipts" aria-controls="panel-receipts" aria-selected="false">Receipts</button>
+      <button type="button" role="tab" id="tab-fedavg" data-tab="fedavg" aria-controls="panel-fedavg" aria-selected="false">FedAvg attest</button>
+      <button type="button" role="tab" id="tab-slash" data-tab="slash" aria-controls="panel-slash" aria-selected="false">Poison / slash</button>
+      <button type="button" role="tab" id="tab-run" data-tab="run" aria-controls="panel-run" aria-selected="false">Run the tour</button>
+      <button type="button" role="tab" id="tab-walkthrough" data-tab="walkthrough" aria-controls="panel-walkthrough" aria-selected="false">Walkthrough</button>
+      <button type="button" role="tab" id="tab-source" data-tab="source" aria-controls="panel-source" aria-selected="false">Source</button>
+    </div>
+    <div class="tabs-fade" aria-hidden="true"></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel active" role="tabpanel" id="panel-overview" aria-labelledby="tab-overview">
+      <p class="kicker">Fe Builders Challenge prototype</p>
+      <h1>Hash receipts, a checkable FedAvg, and a bonded slash</h1>
+      <figure class="diagram"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 200" role="img" aria-label="A round in three steps: receipts, a checkable average, then a poison vote and revise.">
+
+  <defs>
+    <linearGradient id="overview_round_1_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <pattern id="overview_round_1_hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#8a7248" stroke-width="1.1" stroke-opacity="0.55"/>
+    </pattern>
+    <marker id="overview_round_1_arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#c4a574"/>
+    </marker>
+    <marker id="overview_round_1_arr-bright" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#e0c894"/>
+    </marker>
+  </defs>
+
+  <!-- step 1 -->
+  <rect x="8" y="24" width="248" height="152" rx="14" fill="#1a1512" stroke="url(#overview_round_1_brass)" stroke-width="1.6"/>
+  <circle cx="36" cy="52" r="14" fill="#120e0c" stroke="#c4a574" stroke-width="1.4"/>
+  <text x="36" y="57" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">1</text>
+  <text x="132" y="58" font-family="Cormorant Garamond, Georgia, serif" font-size="20" fill="#f3ebe0" font-weight="600">Receipts</text>
+  
+  <rect x="40.0" y="102.0" width="40" height="32" rx="8" fill="#221c18" stroke="url(#overview_round_1_brass)" stroke-width="1.6"/>
+  <text x="60" y="123" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">A</text>
+  
+  <rect x="94.0" y="102.0" width="40" height="32" rx="8" fill="#221c18" stroke="url(#overview_round_1_brass)" stroke-width="1.6"/>
+  <text x="114" y="123" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">B</text>
+  <rect x="150" y="100" width="86" height="48" rx="7" fill="#221c18" stroke="#c4a574" stroke-width="1.4"/>
+  <path d="M162 116 H222 M162 128 H200" stroke="#e0c894" stroke-width="1.3" stroke-linecap="round"/>
+  <text x="132" y="164" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">Hash receipt filed</text>
+  <!-- arrow -->
+  <path d="M266 100 H298" stroke="#c4a574" stroke-width="1.8" marker-end="url(#overview_round_1_arr-bright)"/>
+  <!-- step 2 -->
+  <rect x="306" y="24" width="248" height="152" rx="14" fill="#1a1512" stroke="url(#overview_round_1_brass)" stroke-width="1.6"/>
+  <circle cx="334" cy="52" r="14" fill="#120e0c" stroke="#c4a574" stroke-width="1.4"/>
+  <text x="334" y="57" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">2</text>
+  <text x="430" y="58" font-family="Cormorant Garamond, Georgia, serif" font-size="20" fill="#f3ebe0" font-weight="600">FedAvg attest</text>
+  <rect x="338" y="86" width="184" height="56" rx="8" fill="#221c18" stroke="#c4a574" stroke-width="1.4"/>
+  <text x="430" y="112" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">Average anyone can check</text>
+  <path d="M400 126 L416 136 L454 108" stroke="#e0c894" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="430" y="164" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">No aggregator key</text>
+  <path d="M564 100 H596" stroke="#c4a574" stroke-width="1.8" marker-end="url(#overview_round_1_arr-bright)"/>
+  <!-- step 3 -->
+  <rect x="604" y="24" width="248" height="152" rx="14" fill="#1a1512" stroke="url(#overview_round_1_brass)" stroke-width="1.6"/>
+  <circle cx="632" cy="52" r="14" fill="#120e0c" stroke="#c4a574" stroke-width="1.4"/>
+  <text x="632" y="57" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">3</text>
+  <text x="744" y="58" font-family="Cormorant Garamond, Georgia, serif" font-size="20" fill="#f3ebe0" font-weight="600">Poison / revise</text>
+  <circle cx="684" cy="114" r="18" fill="#221c18" stroke="#c4a574" stroke-width="1.4"/>
+  <text x="684" y="119" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#e0c894" text-anchor="middle">Bond</text>
+  <rect x="718" y="96" width="40" height="36" rx="6" fill="#1a1512" stroke="#5c4a38" stroke-width="1.3"/>
+  <text x="738" y="118" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">D</text>
+  <path d="M724 102 L752 126" stroke="#e0c894" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M770 114 H800" stroke="#c4a574" stroke-width="1.4" marker-end="url(#overview_round_1_arr)"/>
+  <text x="728" y="164" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">Slash, then revise</text>
+</svg>
+</figure>
+      <ol class="steps">
+        <li><span class="step-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Receipt">
+
+  <defs>
+    <linearGradient id="receipt_2_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <linearGradient id="receipt_2_ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1714"/>
+      <stop offset="100%" stop-color="#0a0807"/>
+    </linearGradient>
+  </defs>
+
+
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#receipt_2_ink)" stroke="url(#receipt_2_brass)" stroke-width="1.75"/>
+  <rect x="7" y="7" width="50" height="50" rx="10" fill="none" stroke="#c4a574" stroke-opacity="0.35" stroke-width="0.75"/>
+
+
+  <rect x="22" y="18" width="20" height="28" rx="3.5" stroke="url(#receipt_2_brass)" stroke-width="1.7"/>
+  <path d="M26.5 26.5 H37.5 M26.5 31.5 H37.5 M26.5 36.5 H33" stroke="#e0c894" stroke-width="1.45" stroke-linecap="round"/>
+
+</svg>
+</span><div><strong>Receipts.</strong> Stake, then file <code>keccak256</code> of the update plus its L1 norm. The vector stays off-chain.</div></li>
+        <li><span class="step-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Checkable average">
+
+  <defs>
+    <linearGradient id="attest_3_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <linearGradient id="attest_3_ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1714"/>
+      <stop offset="100%" stop-color="#0a0807"/>
+    </linearGradient>
+  </defs>
+
+
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#attest_3_ink)" stroke="url(#attest_3_brass)" stroke-width="1.75"/>
+  <rect x="7" y="7" width="50" height="50" rx="10" fill="none" stroke="#c4a574" stroke-opacity="0.35" stroke-width="0.75"/>
+
+
+  <path d="M20 34 L28 22 L36 34 L44 22" stroke="url(#attest_3_brass)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M20 42 H44" stroke="#8a7248" stroke-width="1.3" stroke-linecap="round"/>
+  <path d="M26 42 L31 47 L40 36" stroke="#e0c894" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+
+</svg>
+</span><div><strong>FedAvg attest.</strong> Anyone opens the vectors in calldata. The contract checks each hash and stores the average. No aggregator key.</div></li>
+        <li><span class="step-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Bond and slash">
+
+  <defs>
+    <linearGradient id="slash_4_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <linearGradient id="slash_4_ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1714"/>
+      <stop offset="100%" stop-color="#0a0807"/>
+    </linearGradient>
+  </defs>
+
+
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#slash_4_ink)" stroke="url(#slash_4_brass)" stroke-width="1.75"/>
+  <rect x="7" y="7" width="50" height="50" rx="10" fill="none" stroke="#c4a574" stroke-opacity="0.35" stroke-width="0.75"/>
+
+
+  <circle cx="32" cy="30" r="11" stroke="url(#slash_4_brass)" stroke-width="1.7"/>
+  <path d="M32 23 V30 L37 33" stroke="#e0c894" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M21 46 L43 18" stroke="#e0c894" stroke-width="2" stroke-linecap="round"/>
+
+</svg>
+</span><div><strong>Poison vote.</strong> Bond, vote, slash an outlier, then revise. A false charge costs the accuser.</div></li>
+      </ol>
+      <ul class="summary">
+        <li>Protocol in Fe 26.5.0 (<code>3dab95f</code>), ingot <code>fl_coord</code> 0.1.0.</li>
+        <li>Bash and Foundry only drive the judge tour.</li>
+        <li>No model training, no GPU, no mainnet deploy.</li>
+        <li>MIT License, Copyright 2026 Kent G Lau, PhD.</li>
+        <li>Source: <a href="https://github.com/kentydotcom/Fe-Builder-Challenge-2026">github.com/kentydotcom/Fe-Builder-Challenge-2026</a>.</li>
+      </ul>
+
+      <h2>This tree is preparatory, not a judged-window protocol delta</h2>
+      <ul class="summary">
+        <li>Written 28 October 2026, before the 3–24 November 2026 window.</li>
+        <li>No new Fe protocol features after that scaffold.</li>
+        <li>Reconstructed 11 November 2026 from cloud agent <code>bc-12e4d95b-18fd-5153-9343-4b92563a04ed</code>.</li>
+        <li>See <a href="#source/RECONSTRUCTION.md" data-open-source="RECONSTRUCTION.md">RECONSTRUCTION.md</a>.</li>
+      </ul>
+
+      <div class="callout ok">
+        <p class="kicker">Documented results</p>
+        <ul class="summary">
+          <li>24 November 2026 (Asia/Hong_Kong): <code>fe test --jobs 1</code> was <strong>20 passed, 0 failed</strong>; <code>./scripts/e2e.sh --ci</code> was <strong>8 stages passed, 0 failed</strong>, teardown last. Fe 26.5.0, Foundry 1.8.4.</li>
+          <li>28 October and 11 November 2026: 20/20 and 7/7, before teardown was stage 8.</li>
+        </ul>
+      </div>
+
+      <h2>Fe types keep stake and gradients from mixing</h2>
+      
+<figure class="excerpt">
+  <header>
+    <span class="path">src/lib.fe — FlRegistry effects</span>
+    <a href="#source/src/lib.fe" data-open-source="src/lib.fe">Open in Source</a>
+  </header>
+  <pre data-lang="fe" data-start="127"><code>pub contract FlRegistry uses (ctx: Ctx, call: mut Call, log: mut Log) {
+    mut ledger: Ledger,
+
+    init(min_stake: Wei, bond: Wei, vote_bond: Wei, slash_amount: Wei) uses (mut ledger) {
+        ledger.configure(min_stake, bond, vote_bond, slash_amount)
+    }
+
+    recv FlMsg {
+        #[payable]
+        Register { pubkey } uses (mut ledger, ctx, mut log) {
+            let caller = ctx.caller()
+            let value = ctx.value()
+            ledger.register(caller, pubkey, value)</code></pre>
+</figure>
+
+      <ul class="summary">
+        <li>Stake is <code>Wei</code>; a coordinate is <code>i64</code>; those types do not add.</li>
+        <li>Handlers name the effects they use. <code>Ledger</code> cannot log or send ETH unless the handler passes <code>log</code> and <code>call</code>.</li>
+      </ul>
+
+      <h2>What this is not</h2>
+      <ul class="summary">
+        <li>Fe 26.x is not production-ready.</li>
+        <li>This is a demo with tests, not a system to deploy with real money.</li>
+        <li>No mainnet or testnet deploy.</li>
+        <li>Four-client cap; the L1 norm is public, so this is not private FL.</li>
+        <li>Integer FedAvg toward zero; outlier bound of 20.</li>
+        <li>No proof-of-deletion, escrow, hashmirror, lineage, vertical FL, or agent-tool payments.</li>
+        <li>Full notes: <a href="#source/README.md" data-open-source="README.md">README.md</a>. New to Fe? Use the <a href="#walkthrough">Walkthrough</a> tab.</li>
+      </ul>
+    </section>
+
+    <section class="panel wide" role="tabpanel" id="panel-problem" aria-labelledby="tab-problem" hidden>
+      <div class="measure">
+        <p class="kicker">Why this coordinator exists</p>
+        <h1>A trusted middleman, then a checkable coordinator</h1>
+      </div>
+      <div class="storyboard" aria-label="A federated-learning round, before and after">
+  <div class="sb-act sb-pain">
+    <p class="kicker">Today</p>
+    <div class="sb-row">
+      <figure class="sb-frame">
+  <div class="sb-head"><span class="sb-num">1</span><p class="sb-title">Clients train a shared model. Raw data stays put.</p></div>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 168" role="img" aria-label="Clients train a shared model. Raw data stays with them.">
+
+  <defs>
+    <linearGradient id="sb_01_5_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <pattern id="sb_01_5_hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#8a7248" stroke-width="1.1" stroke-opacity="0.55"/>
+    </pattern>
+    <marker id="sb_01_5_arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#c4a574"/>
+    </marker>
+    <marker id="sb_01_5_arr-bright" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#e0c894"/>
+    </marker>
+  </defs>
+
+  <!-- four clients with locked data that stays put -->
+  
+  <rect x="36.0" y="34.0" width="44" height="36" rx="8" fill="#221c18" stroke="url(#sb_01_5_brass)" stroke-width="1.6"/>
+  <text x="58" y="57" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">A</text>
+  
+  <rect x="36.0" y="98.0" width="44" height="36" rx="8" fill="#221c18" stroke="url(#sb_01_5_brass)" stroke-width="1.6"/>
+  <text x="58" y="121" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">C</text>
+  
+  <rect x="128.0" y="34.0" width="44" height="36" rx="8" fill="#221c18" stroke="url(#sb_01_5_brass)" stroke-width="1.6"/>
+  <text x="150" y="57" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">B</text>
+  
+  <rect x="128.0" y="98.0" width="44" height="36" rx="8" fill="#221c18" stroke="url(#sb_01_5_brass)" stroke-width="1.6"/>
+  <text x="150" y="121" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">D</text>
+  <!-- lock / data stays under each? one lock badge near the group -->
+  <g>
+    <rect x="92" y="72" width="24" height="20" rx="3" fill="#120e0c" stroke="#c4a574" stroke-width="1.3"/>
+    <path d="M99 72 V66 A5 5 0 0 1 109 66 V72" stroke="#e0c894" stroke-width="1.4" stroke-linecap="round"/>
+    <circle cx="104" cy="82" r="2" fill="#e0c894"/>
+  </g>
+  <text x="104" y="108" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">Raw data</text>
+  <!-- arrows to shared model, not carrying the data box -->
+  <path d="M176 64 C200 64 210 74 226 84" stroke="#c4a574" stroke-width="1.5" marker-end="url(#sb_01_5_arr)"/>
+  <path d="M176 104 C200 104 210 94 226 88" stroke="#c4a574" stroke-width="1.5" marker-end="url(#sb_01_5_arr)"/>
+  <circle cx="256" cy="84" r="28" fill="#2a221c" stroke="url(#sb_01_5_brass)" stroke-width="1.8"/>
+  <circle cx="256" cy="84" r="8" fill="none" stroke="#e0c894" stroke-width="1.5"/>
+  <circle cx="244" cy="70" r="3" fill="#c4a574"/>
+  <circle cx="270" cy="70" r="3" fill="#c4a574"/>
+  <circle cx="244" cy="98" r="3" fill="#c4a574"/>
+  <circle cx="270" cy="98" r="3" fill="#c4a574"/>
+  <path d="M246 72 L253 81 M267 72 L259 81 M246 96 L253 87 M267 96 L259 87" stroke="#8a7248" stroke-width="1"/>
+  <text x="256" y="132" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">Shared model</text>
+  </svg>
+
+</figure>
+<figure class="sb-frame">
+  <div class="sb-head"><span class="sb-num">2</span><p class="sb-title">One middleman publishes an average nobody can check.</p></div>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 168" role="img" aria-label="Updates go into one trusted middleman. The average cannot be checked.">
+
+  <defs>
+    <linearGradient id="sb_02_6_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <pattern id="sb_02_6_hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#8a7248" stroke-width="1.1" stroke-opacity="0.55"/>
+    </pattern>
+    <marker id="sb_02_6_arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#c4a574"/>
+    </marker>
+    <marker id="sb_02_6_arr-bright" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#e0c894"/>
+    </marker>
+  </defs>
+
+  <rect x="26.0" y="16.0" width="40" height="28" rx="8" fill="#221c18" stroke="url(#sb_02_6_brass)" stroke-width="1.6"/>
+  <text x="46" y="35" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">A</text>
+  <rect x="26.0" y="50.0" width="40" height="28" rx="8" fill="#221c18" stroke="url(#sb_02_6_brass)" stroke-width="1.6"/>
+  <text x="46" y="69" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">B</text>
+  <rect x="26.0" y="84.0" width="40" height="28" rx="8" fill="#221c18" stroke="url(#sb_02_6_brass)" stroke-width="1.6"/>
+  <text x="46" y="103" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">C</text>
+  <rect x="26.0" y="118.0" width="40" height="28" rx="8" fill="#221c18" stroke="url(#sb_02_6_brass)" stroke-width="1.6"/>
+  <text x="46" y="137" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">D</text>
+  <path d="M68 30 H100" stroke="#c4a574" stroke-width="1.5" marker-end="url(#sb_02_6_arr)"/>
+  <path d="M68 64 H100" stroke="#c4a574" stroke-width="1.5" marker-end="url(#sb_02_6_arr)"/>
+  <path d="M68 98 H100" stroke="#c4a574" stroke-width="1.5" marker-end="url(#sb_02_6_arr)"/>
+  <path d="M68 132 H100" stroke="#c4a574" stroke-width="1.5" marker-end="url(#sb_02_6_arr)"/>
+  <rect x="108" y="16" width="130" height="136" rx="12" fill="#1a1512" stroke="#5c4a38" stroke-width="1.8"/>
+  <rect x="108" y="16" width="130" height="136" rx="12" fill="url(#sb_02_6_hatch)"/>
+  <text x="173" y="76" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">Middleman</text>
+  <text x="173" y="96" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500" letter-spacing="1.6">TRUST ME</text>
+  <path d="M238 84 H268" stroke="#c4a574" stroke-width="1.6" marker-end="url(#sb_02_6_arr)"/>
+  <rect x="270" y="62" width="78" height="44" rx="8" fill="#221c18" stroke="#5c4a38" stroke-width="1.6"/>
+  <text x="309" y="82" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">Average</text>
+  <text x="309" y="100" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="20" fill="#e0c894" text-anchor="middle" font-weight="600">?</text>
+</svg>
+
+</figure>
+<figure class="sb-frame">
+  <div class="sb-head"><span class="sb-num">3</span><p class="sb-title">No receipt. Poison skews it. A false charge is free.</p></div>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 168" role="img" aria-label="No receipt, a poisoned update can skew the average, and a false charge is free.">
+
+  <defs>
+    <linearGradient id="sb_03_7_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <pattern id="sb_03_7_hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#8a7248" stroke-width="1.1" stroke-opacity="0.55"/>
+    </pattern>
+    <marker id="sb_03_7_arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#c4a574"/>
+    </marker>
+    <marker id="sb_03_7_arr-bright" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#e0c894"/>
+    </marker>
+  </defs>
+
+  <!-- three clear pictograms -->
+  <!-- no receipt -->
+  <rect x="16" y="28" width="100" height="110" rx="10" fill="#1a1512" stroke="#3d3229" stroke-width="1.4"/>
+  <rect x="44" y="44" width="44" height="56" rx="5" fill="#221c18" stroke="#c4a574" stroke-width="1.5"/>
+  <path d="M52 60 H80 M52 72 H80 M52 84 H70" stroke="#8a7248" stroke-width="1.4" stroke-linecap="round"/>
+  <path d="M40 48 L92 96 M92 48 L40 96" stroke="#e0c894" stroke-width="2.1" stroke-linecap="round"/>
+  <text x="66" y="122" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#a89888" text-anchor="middle">No receipt</text>
+
+  <!-- poison skew -->
+  <rect x="130" y="28" width="100" height="110" rx="10" fill="#1a1512" stroke="#3d3229" stroke-width="1.4"/>
+  <path d="M146 96 H214" stroke="#6f6256" stroke-width="1.2"/>
+  <path d="M152 96 L164 88 L176 90 L188 86" stroke="#c4a574" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M188 86 L210 46" stroke="#e0c894" stroke-width="2.4" stroke-linecap="round"/>
+  <circle cx="210" cy="46" r="7" fill="#2a221c" stroke="#e0c894" stroke-width="1.4"/>
+  <text x="210" y="50" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#f3ebe0" text-anchor="middle" font-weight="600">D</text>
+  <text x="180" y="122" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#a89888" text-anchor="middle">Poison skews it</text>
+
+  <!-- false charge is free -->
+  <rect x="244" y="28" width="100" height="110" rx="10" fill="#1a1512" stroke="#3d3229" stroke-width="1.4"/>
+  <circle cx="294" cy="72" r="18" fill="#221c18" stroke="#8a7248" stroke-width="1.5" stroke-dasharray="3.5 3"/>
+  <text x="294" y="76" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="16" fill="#a89888" text-anchor="middle">0</text>
+  <path d="M282 58 L306 86" stroke="#e0c894" stroke-width="1.8" stroke-linecap="round"/>
+  <text x="294" y="122" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#a89888" text-anchor="middle">False charge is free</text>
+</svg>
+
+</figure>
+    </div>
+  </div>
+  <div class="sb-act sb-fix">
+    <p class="kicker">What this coordinator does</p>
+    <div class="sb-row">
+      <figure class="sb-frame">
+  <div class="sb-head"><span class="sb-num">4</span><p class="sb-title">Each client stakes a hash receipt. Updates stay off-chain.</p></div>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 168" role="img" aria-label="Each client files a hash receipt. The update stays off-chain.">
+
+  <defs>
+    <linearGradient id="sb_04_8_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <pattern id="sb_04_8_hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#8a7248" stroke-width="1.1" stroke-opacity="0.55"/>
+    </pattern>
+    <marker id="sb_04_8_arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#c4a574"/>
+    </marker>
+    <marker id="sb_04_8_arr-bright" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#e0c894"/>
+    </marker>
+  </defs>
+
+  <text x="78" y="20" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">Off-chain</text>
+  <rect x="18.0" y="33.0" width="36" height="26" rx="8" fill="#221c18" stroke="url(#sb_04_8_brass)" stroke-width="1.6"/>
+  <text x="36" y="51" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">A</text>
+  <rect x="18.0" y="67.0" width="36" height="26" rx="8" fill="#221c18" stroke="url(#sb_04_8_brass)" stroke-width="1.6"/>
+  <text x="36" y="85" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">B</text>
+  <rect x="18.0" y="101.0" width="36" height="26" rx="8" fill="#221c18" stroke="url(#sb_04_8_brass)" stroke-width="1.6"/>
+  <text x="36" y="119" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">C</text>
+  <rect x="18.0" y="135.0" width="36" height="26" rx="8" fill="#221c18" stroke="url(#sb_04_8_brass)" stroke-width="1.6"/>
+  <text x="36" y="153" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">D</text>
+  <rect x="62" y="38" width="14" height="14" rx="2.5" fill="#2a221c" stroke="#8a7248" stroke-width="1.2"/>
+  <rect x="62" y="72" width="14" height="14" rx="2.5" fill="#2a221c" stroke="#8a7248" stroke-width="1.2"/>
+  <rect x="62" y="106" width="14" height="14" rx="2.5" fill="#2a221c" stroke="#8a7248" stroke-width="1.2"/>
+  <rect x="62" y="140" width="14" height="14" rx="2.5" fill="#2a221c" stroke="#8a7248" stroke-width="1.2"/>
+  <path d="M86 46 H128" stroke="#c4a574" stroke-width="1.5" marker-end="url(#sb_04_8_arr-bright)"/>
+  <path d="M86 80 H128" stroke="#c4a574" stroke-width="1.5" marker-end="url(#sb_04_8_arr-bright)"/>
+  <path d="M86 114 H128" stroke="#c4a574" stroke-width="1.5" marker-end="url(#sb_04_8_arr-bright)"/>
+  <path d="M86 148 H128" stroke="#c4a574" stroke-width="1.5" marker-end="url(#sb_04_8_arr-bright)"/>
+  <text x="240" y="20" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">On-chain</text>
+  <rect x="134" y="30" width="210" height="126" rx="12" fill="#1a1512" stroke="url(#sb_04_8_brass)" stroke-width="1.7"/>
+  <rect x="148" y="44" width="88" height="40" rx="6" fill="#221c18" stroke="#c4a574" stroke-width="1.4"/>
+  <path d="M158 58 H222 M158 70 H200" stroke="#e0c894" stroke-width="1.3" stroke-linecap="round"/>
+  <rect x="148" y="92" width="88" height="40" rx="6" fill="#221c18" stroke="#c4a574" stroke-width="1.4"/>
+  <path d="M158 106 H222 M158 118 H200" stroke="#e0c894" stroke-width="1.3" stroke-linecap="round"/>
+  <rect x="248" y="58" width="82" height="60" rx="6" fill="#2a221c" stroke="#e0c894" stroke-width="1.4"/>
+  <circle cx="268" cy="88" r="9" fill="none" stroke="#c4a574" stroke-width="1.3"/>
+  <text x="292" y="84" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#f3ebe0">Stake</text>
+  <text x="292" y="100" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888">+ receipt</text>
+  <text x="192" y="146" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">Hash receipt</text>
+</svg>
+
+</figure>
+<figure class="sb-frame">
+  <div class="sb-head"><span class="sb-num">5</span><p class="sb-title">Anyone checks the average against those receipts.</p></div>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 168" role="img" aria-label="Anyone checks the average against those receipts. No special key.">
+
+  <defs>
+    <linearGradient id="sb_05_9_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <pattern id="sb_05_9_hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#8a7248" stroke-width="1.1" stroke-opacity="0.55"/>
+    </pattern>
+    <marker id="sb_05_9_arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#c4a574"/>
+    </marker>
+    <marker id="sb_05_9_arr-bright" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#e0c894"/>
+    </marker>
+  </defs>
+
+  <!-- anyone figure -->
+  <circle cx="48" cy="64" r="12" stroke="url(#sb_05_9_brass)" stroke-width="1.6"/>
+  <path d="M30 110 C30 86 38 78 48 78 C58 78 66 86 66 110" stroke="url(#sb_05_9_brass)" stroke-width="1.6" stroke-linecap="round"/>
+  <text x="48" y="128" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">Anyone</text>
+  <path d="M70 80 H108" stroke="#c4a574" stroke-width="1.6" marker-end="url(#sb_05_9_arr-bright)"/>
+  <!-- receipts being checked -->
+  <rect x="114" y="28" width="122" height="120" rx="12" fill="#1a1512" stroke="url(#sb_05_9_brass)" stroke-width="1.7"/>
+  <text x="175" y="50" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">Receipts</text>
+  <g>
+    <rect x="128" y="60" width="70" height="20" rx="4" fill="#221c18" stroke="#c4a574" stroke-width="1.2"/>
+    <path d="M204 64 L210 70 L222 56" stroke="#e0c894" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="128" y="88" width="70" height="20" rx="4" fill="#221c18" stroke="#c4a574" stroke-width="1.2"/>
+    <path d="M204 92 L210 98 L222 84" stroke="#e0c894" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="128" y="116" width="70" height="20" rx="4" fill="#221c18" stroke="#c4a574" stroke-width="1.2"/>
+    <path d="M204 120 L210 126 L222 112" stroke="#e0c894" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M236 88 H268" stroke="#c4a574" stroke-width="1.6" marker-end="url(#sb_05_9_arr-bright)"/>
+  <rect x="272" y="64" width="76" height="48" rx="8" fill="#2a221c" stroke="url(#sb_05_9_brass)" stroke-width="1.7"/>
+  <text x="310" y="86" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">Average</text>
+  <path d="M296 100 L306 108 L326 92" stroke="#e0c894" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- no special key -->
+  <g transform="translate(300 20)">
+    <path d="M8 14 A8 8 0 1 1 16 18 L16 22 H22 V26 H10 V18 A8 8 0 0 1 8 14Z" stroke="#8a7248" stroke-width="1.3"/>
+    <path d="M2 6 L26 30" stroke="#e0c894" stroke-width="1.7" stroke-linecap="round"/>
+  </g>
+  <text x="310" y="154" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">No special key</text>
+</svg>
+
+</figure>
+<figure class="sb-frame">
+  <div class="sb-head"><span class="sb-num">6</span><p class="sb-title">Bond a charge, slash the outlier, revise the average.</p></div>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 168" role="img" aria-label="Peers bond a charge, slash a real outlier, and revise the average.">
+
+  <defs>
+    <linearGradient id="sb_06_10_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <pattern id="sb_06_10_hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#8a7248" stroke-width="1.1" stroke-opacity="0.55"/>
+    </pattern>
+    <marker id="sb_06_10_arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#c4a574"/>
+    </marker>
+    <marker id="sb_06_10_arr-bright" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#e0c894"/>
+    </marker>
+  </defs>
+
+  <!-- bond -->
+  <circle cx="48" cy="78" r="22" fill="#221c18" stroke="url(#sb_06_10_brass)" stroke-width="1.7"/>
+  <circle cx="48" cy="78" r="15" stroke="#8a7248" stroke-width="1"/>
+  <text x="48" y="83" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">Bond</text>
+  <path d="M72 78 H102" stroke="#c4a574" stroke-width="1.6" marker-end="url(#sb_06_10_arr-bright)"/>
+  <!-- slash D -->
+  <rect x="108" y="50" width="70" height="56" rx="8" fill="#1a1512" stroke="#5c4a38" stroke-width="1.6"/>
+  <text x="143" y="76" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">D</text>
+  <path d="M120 58 L166 98 M166 58 L120 98" stroke="#e0c894" stroke-width="2.1" stroke-linecap="round"/>
+  <text x="143" y="122" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#a89888" text-anchor="middle">Slash outlier</text>
+  <path d="M178 78 H208" stroke="#c4a574" stroke-width="1.6" marker-end="url(#sb_06_10_arr-bright)"/>
+  <!-- revised average from A B C -->
+  <rect x="214" y="36" width="130" height="96" rx="10" fill="#2a221c" stroke="url(#sb_06_10_brass)" stroke-width="1.7"/>
+  <text x="250" y="62" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">A</text>
+  <text x="279" y="62" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">B</text>
+  <text x="308" y="62" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">C</text>
+  <path d="M250 70 V84 H308 V70" stroke="#8a7248" stroke-width="1.2"/>
+  <path d="M279 84 V96" stroke="#c4a574" stroke-width="1.4" marker-end="url(#sb_06_10_arr)"/>
+  <text x="279" y="114" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">Revised average</text>
+  <text x="180" y="154" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">A false charge costs the accuser</text>
+</svg>
+
+</figure>
+    </div>
+  </div>
+</div>
+      <div class="measure">
+        <h2>In short</h2>
+        <ul class="summary">
+          <li>Clients train a shared model; raw data stays with them.</li>
+          <li>Today, one middleman publishes an average nobody can check.</li>
+          <li>There is no receipt, poison can skew the average, and a false charge is free.</li>
+          <li>Here, each client stakes a hash receipt; updates stay off-chain.</li>
+          <li>Anyone can check the average against those receipts.</li>
+          <li>A bonded charge can slash an outlier and revise the average; a false charge costs the accuser.</li>
+          <li>The demo uses four <code>i64</code> coordinates as a stand-in, not private FL.</li>
+          <li>The L1 score is stored in the clear; the client cap is four; Fe 26.x is not production-ready.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel" role="tabpanel" id="panel-receipts" aria-labelledby="tab-receipts" hidden>
+      <p class="kicker">Chapter 1</p>
+      <h1>The update stays off-chain; storage keeps only the hash and the L1 score</h1>
+      <figure class="diagram"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 220" role="img" aria-label="The vector stays off-chain. On-chain stores only the hash and the L1 score. Clients register, a round opens, then they submit.">
+
+  <defs>
+    <linearGradient id="receipts_flow_11_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <pattern id="receipts_flow_11_hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#8a7248" stroke-width="1.1" stroke-opacity="0.55"/>
+    </pattern>
+    <marker id="receipts_flow_11_arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#c4a574"/>
+    </marker>
+    <marker id="receipts_flow_11_arr-bright" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#e0c894"/>
+    </marker>
+  </defs>
+
+  <text x="150" y="28" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">Off-chain</text>
+  <rect x="16" y="40" width="268" height="160" rx="14" fill="#1a1512" stroke="#3d3229" stroke-width="1.5"/>
+  
+  <rect x="54.0" y="80.0" width="52" height="40" rx="8" fill="#221c18" stroke="url(#receipts_flow_11_brass)" stroke-width="1.6"/>
+  <text x="80" y="105" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">A</text>
+  <rect x="150" y="78" width="110" height="64" rx="8" fill="#2a221c" stroke="#8a7248" stroke-width="1.4"/>
+  <text x="205" y="104" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">(1, 2, 3, 4)</text>
+  <text x="205" y="124" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">Vector stays here</text>
+  <path d="M284 120 H330" stroke="#c4a574" stroke-width="1.6" marker-end="url(#receipts_flow_11_arr-bright)"/>
+  <text x="308" y="110" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">hash only</text>
+
+  <text x="560" y="28" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">On-chain</text>
+  <rect x="338" y="40" width="506" height="160" rx="14" fill="#1a1512" stroke="url(#receipts_flow_11_brass)" stroke-width="1.7"/>
+  <!-- register / open / submit -->
+  <rect x="358" y="62" width="120" height="70" rx="8" fill="#221c18" stroke="#c4a574" stroke-width="1.4"/>
+  <text x="418" y="92" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">Register</text>
+  <text x="418" y="112" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">Stake + key</text>
+  <path d="M478 96 H508" stroke="#c4a574" stroke-width="1.5" marker-end="url(#receipts_flow_11_arr)"/>
+  <rect x="512" y="62" width="120" height="70" rx="8" fill="#221c18" stroke="#c4a574" stroke-width="1.4"/>
+  <text x="572" y="92" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">Open</text>
+  <text x="572" y="112" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">Round 7</text>
+  <path d="M632 96 H662" stroke="#c4a574" stroke-width="1.5" marker-end="url(#receipts_flow_11_arr)"/>
+  <rect x="666" y="62" width="156" height="70" rx="8" fill="#2a221c" stroke="#e0c894" stroke-width="1.5"/>
+  <text x="744" y="88" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">Submit</text>
+  <text x="744" y="108" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">hash + L1 score</text>
+  <text x="591" y="160" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#a89888" text-anchor="middle">Storage keeps the hash and the score — not the four coordinates</text>
+  <text x="744" y="180" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle">L1 = 10</text>
+</svg>
+</figure>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Client</th><th>Vector</th><th>L1 score</th><th>Role</th></tr></thead>
+          <tbody>
+            <tr><td>A</td><td><code>(1, 2, 3, 4)</code></td><td>10</td><td>honest</td></tr>
+            <tr><td>B</td><td><code>(2, 2, 3, 4)</code></td><td>11</td><td>honest</td></tr>
+            <tr><td>C</td><td><code>(1, 1, 3, 5)</code></td><td>10</td><td>honest</td></tr>
+            <tr><td>D</td><td><code>(40, 40, 40, 40)</code></td><td>160</td><td>outlier</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="summary">
+        <li>Register with stake, open round <code>7</code>, then each client submits a hash and a score.</li>
+        <li>A second submit reverts with <code>AlreadySubmitted</code>; a stake below <code>min_stake</code> reverts with <code>StakeTooSmall</code>.</li>
+        <li>The public-key commitment is a <code>u256</code>, not a name or other personal data.</li>
+        <li>Tests: <code>test_stage1_register_open_submit</code>, <code>test_stage1_low_stake</code>, <code>test_stage1_double_submit</code>.</li>
+      </ul>
+
+      <h2>Keccak-256 commits to domain, round, client, score, and coordinates</h2>
+      
+<figure class="excerpt">
+  <header>
+    <span class="path">src/agg.fe — hash_update and l1</span>
+    <a href="#source/src/agg.fe" data-open-source="src/agg.fe">Open in Source</a>
+  </header>
+  <pre data-lang="fe" data-start="11"><code>/// Domain separator so a receipt hash cannot be reused as a FedAvg commitment.
+pub const FL_DOMAIN: u256 = 0x666c2d636f6f7264
+
+/// A client is an outlier when |score - median| is strictly greater than this.
+pub const OUTLIER_BOUND: u256 = 20
+
+/// Demo cap. The attest ABI uses fixed arrays of this length.
+pub const MAX_CLIENTS: usize = 4
+
+/// Quorum: at least this many peer support votes, and more support stake than oppose stake.
+pub const MIN_VOTES: u256 = 1
+
+/// One simulated client update. Four coordinates keep the demo readable.
+pub struct Coords {
+    pub c0: i64,
+    pub c1: i64,
+    pub c2: i64,
+    pub c3: i64,
+}
+
+impl Copy for Coords {}
+
+/// Anything that can be committed as a keccak word-string.
+pub trait Commitment {
+    fn commit(self) -&gt; u256
+}
+
+impl Commitment for Coords {
+    fn commit(self) -&gt; u256 {
+        keccak_words([
+            IntWord::to_word(self.c0),
+            IntWord::to_word(self.c1),
+            IntWord::to_word(self.c2),
+            IntWord::to_word(self.c3),
+        ])
+    }
+}
+
+/// Fixed-length word vector. `N &gt; 0` is rejected at compile time for `N = 0`.
+pub struct WordVec&lt;const N: usize&gt; where N &gt; 0 {
+    pub words: [u256; N],
+}
+
+impl&lt;const N: usize&gt; WordVec&lt;N&gt; {
+    /// Sum with a closure. Closures are a Fe 26.5 feature.
+    pub fn sum(self) -&gt; u256 {
+        self.words.fold(0, |acc: own u256, word: u256| -&gt; u256 { acc + word })
+    }
+}
+
+/// Public L1 norm. This is the only numeric statistic stored beside the hash.
+pub fn l1(_ coords: Coords) -&gt; u256 {
+    let m0: u64 = coords.c0.unsigned_abs()
+    let m1: u64 = coords.c1.unsigned_abs()
+    let m2: u64 = coords.c2.unsigned_abs()
+    let m3: u64 = coords.c3.unsigned_abs()
+    IntWord::to_word(m0) + IntWord::to_word(m1) + IntWord::to_word(m2) + IntWord::to_word(m3)
+}
+
+/// Commitment to (domain, round, client, score, coordinates).
+/// Changing any coordinate, the score, the round, or the client changes the hash.
+pub fn hash_update(_ round_id: u256, _ client: u256, _ coords: Coords) -&gt; u256 {
+    keccak_words([
+        FL_DOMAIN,
+        round_id,
+        client,
+        l1(coords),
+        IntWord::to_word(coords.c0),
+        IntWord::to_word(coords.c1),
+        IntWord::to_word(coords.c2),
+        IntWord::to_word(coords.c3),
+    ])
+}</code></pre>
+</figure>
+
+      <ul class="summary">
+        <li>Changing any committed field changes the hash.</li>
+        <li>The L1 norm is the only numeric statistic stored beside the hash.</li>
+      </ul>
+
+      <h2>The ledger stores clients, receipts, and the round — not the vectors</h2>
+      
+<figure class="excerpt">
+  <header>
+    <span class="path">src/ledger.fe — Phase, Client, Receipt</span>
+    <a href="#source/src/ledger.fe" data-open-source="src/ledger.fe">Open in Source</a>
+  </header>
+  <pre data-lang="fe" data-start="19"><code>pub enum Phase {
+    Empty,
+    Open,
+    Attested,
+    Settled,
+}
+
+impl Copy for Phase {}
+
+pub struct Client {
+    pub registered: bool,
+    pub stake: Wei,
+    pub pubkey: u256,
+}
+
+impl Copy for Client {}
+
+pub struct Receipt {
+    pub submitted: bool,
+    pub update_hash: u256,
+    pub score: u256,
+    pub poisoned: bool,
+}
+</code></pre>
+</figure>
+
+      
+<figure class="excerpt">
+  <header>
+    <span class="path">src/ledger.fe — register, open_round, submit</span>
+    <a href="#source/src/ledger.fe" data-open-source="src/ledger.fe">Open in Source</a>
+  </header>
+  <pre data-lang="fe" data-start="168"><code>    pub fn register(mut self, _ who: Address, _ pubkey: u256, _ value: Wei) {
+        if who == Address::zero() {
+            revert_error(ZeroAddress {})
+        }
+        var client = self.clients.get(key: who)
+        if client.registered {
+            revert_error(AlreadyRegistered {})
+        }
+        if value &lt; self.min_stake {
+            revert_error(StakeTooSmall { sent: value.as_wei(), required: self.min_stake.as_wei() })
+        }
+        client.registered = true
+        client.stake = value
+        client.pubkey = pubkey
+        self.clients.set(key: who, value: client)
+    }
+
+    pub fn open_round(mut self, _ round_id: u256) {
+        var round = self.rounds.get(key: round_id)
+        require_phase(phase: round.phase, expected: Phase::Empty)
+        round.phase = Phase::Open
+        self.rounds.set(key: round_id, value: round)
+    }
+
+    pub fn submit(mut self, _ who: Address, _ round_id: u256, _ update_hash: u256, _ score: u256) {
+        let client = self.clients.get(key: who)
+        if !client.registered {
+            revert_error(NotRegistered {})
+        }
+        var round = self.rounds.get(key: round_id)
+        require_phase(phase: round.phase, expected: Phase::Open)
+        if round.receipt_count == 4 {
+            revert_error(RoundFull {})
+        }
+        var receipt = self.receipts.get(key: (round_id, who))
+        if receipt.submitted {
+            revert_error(AlreadySubmitted {})
+        }
+        if update_hash == 0 {
+            revert_error(EmptyHash {})
+        }
+        receipt.submitted = true
+        receipt.update_hash = update_hash
+        receipt.score = score
+        receipt.poisoned = false
+        self.receipts.set(key: (round_id, who), value: receipt)
+        let index = as_index(round.receipt_count)
+        round.clients[index] = who
+        round.receipt_count = round.receipt_count + 1
+        self.rounds.set(key: round_id, value: round)
+    }</code></pre>
+</figure>
+
+      
+<figure class="excerpt">
+  <header>
+    <span class="path">src/lib.fe — Register, OpenRound, SubmitReceipt</span>
+    <a href="#source/src/lib.fe" data-open-source="src/lib.fe">Open in Source</a>
+  </header>
+  <pre data-lang="fe" data-start="18"><code>pub msg FlMsg {
+    #[selector = sol(&quot;register(uint256)&quot;)]
+    Register { pubkey: u256 },
+
+    #[selector = sol(&quot;openRound(uint256)&quot;)]
+    OpenRound { round_id: u256 },
+
+    #[selector = sol(&quot;submitReceipt(uint256,uint256,uint256)&quot;)]
+    SubmitReceipt { round_id: u256, update_hash: u256, score: u256 },
+</code></pre>
+</figure>
+
+      
+<figure class="excerpt">
+  <header>
+    <span class="path">src/lib.fe — recv arms for receipts</span>
+    <a href="#source/src/lib.fe" data-open-source="src/lib.fe">Open in Source</a>
+  </header>
+  <pre data-lang="fe" data-start="134"><code>    recv FlMsg {
+        #[payable]
+        Register { pubkey } uses (mut ledger, ctx, mut log) {
+            let caller = ctx.caller()
+            let value = ctx.value()
+            ledger.register(caller, pubkey, value)
+            log.emit(ClientRegistered { client: caller, pubkey, stake: value })
+        }
+
+        OpenRound { round_id } uses (mut ledger, mut log) {
+            ledger.open_round(round_id)
+            log.emit(RoundOpened { round_id })
+        }
+
+        SubmitReceipt { round_id, update_hash, score } uses (mut ledger, ctx, mut log) {
+            let caller = ctx.caller()
+            ledger.submit(caller, round_id, update_hash, score)
+            log.emit(ReceiptSubmitted { round_id, client: caller, update_hash, score })
+        }</code></pre>
+</figure>
+
+    </section>
+
+    <section class="panel" role="tabpanel" id="panel-fedavg" aria-labelledby="tab-fedavg" hidden>
+      <p class="kicker">Chapter 2</p>
+      <h1>Anyone opens the vectors; the contract attests the average — no trusted aggregator</h1>
+      <figure class="diagram"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 240" role="img" aria-label="Anyone submits the vectors. The contract recomputes each hash and L1 score. A mismatch reverts. On a match it stores the sum, average, and participant commitments. No trusted aggregator key.">
+
+  <defs>
+    <linearGradient id="fedavg_attest_12_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <pattern id="fedavg_attest_12_hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#8a7248" stroke-width="1.1" stroke-opacity="0.55"/>
+    </pattern>
+    <marker id="fedavg_attest_12_arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#c4a574"/>
+    </marker>
+    <marker id="fedavg_attest_12_arr-bright" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#e0c894"/>
+    </marker>
+  </defs>
+
+  <text x="110" y="28" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">Anyone submits vectors</text>
+  <rect x="16" y="40" width="188" height="180" rx="14" fill="#1a1512" stroke="#3d3229" stroke-width="1.5"/>
+  <text x="110" y="70" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">Calldata, not storage</text>
+  
+  <rect x="48.0" y="94.0" width="44" height="32" rx="8" fill="#221c18" stroke="url(#fedavg_attest_12_brass)" stroke-width="1.6"/>
+  <text x="70" y="115" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">A</text>
+  
+  <rect x="108.0" y="94.0" width="44" height="32" rx="8" fill="#221c18" stroke="url(#fedavg_attest_12_brass)" stroke-width="1.6"/>
+  <text x="130" y="115" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">B</text>
+  
+  <rect x="48.0" y="144.0" width="44" height="32" rx="8" fill="#221c18" stroke="url(#fedavg_attest_12_brass)" stroke-width="1.6"/>
+  <text x="70" y="165" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">C</text>
+  
+  <rect x="108.0" y="144.0" width="44" height="32" rx="8" fill="#221c18" stroke="url(#fedavg_attest_12_brass)" stroke-width="1.6"/>
+  <text x="130" y="165" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">D</text>
+  <path d="M204 130 H244" stroke="#c4a574" stroke-width="1.7" marker-end="url(#fedavg_attest_12_arr-bright)"/>
+
+  <rect x="252" y="40" width="280" height="180" rx="14" fill="#1a1512" stroke="url(#fedavg_attest_12_brass)" stroke-width="1.7"/>
+  <text x="392" y="70" font-family="Cormorant Garamond, Georgia, serif" font-size="20" fill="#f3ebe0" font-weight="600" text-anchor="middle">Contract checks</text>
+  <rect x="272" y="88" width="240" height="44" rx="8" fill="#221c18" stroke="#c4a574" stroke-width="1.4"/>
+  <text x="392" y="116" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">Recompute hash and L1</text>
+  <!-- branch -->
+  <path d="M392 132 V148" stroke="#c4a574" stroke-width="1.4"/>
+  <path d="M392 148 H320" stroke="#8a7248" stroke-width="1.4" marker-end="url(#fedavg_attest_12_arr)"/>
+  <path d="M392 148 H464" stroke="#c4a574" stroke-width="1.4" marker-end="url(#fedavg_attest_12_arr-bright)"/>
+  <rect x="268" y="158" width="104" height="44" rx="8" fill="#120e0c" stroke="#5c4a38" stroke-width="1.4"/>
+  <text x="320" y="185" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#a89888" text-anchor="middle">Mismatch → revert</text>
+  <rect x="412" y="158" width="104" height="44" rx="8" fill="#2a221c" stroke="#e0c894" stroke-width="1.4"/>
+  <text x="464" y="185" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">Match</text>
+
+  <path d="M532 130 H572" stroke="#c4a574" stroke-width="1.7" marker-end="url(#fedavg_attest_12_arr-bright)"/>
+  <rect x="580" y="40" width="264" height="180" rx="14" fill="#1a1512" stroke="url(#fedavg_attest_12_brass)" stroke-width="1.7"/>
+  <text x="712" y="70" font-family="Cormorant Garamond, Georgia, serif" font-size="20" fill="#f3ebe0" font-weight="600" text-anchor="middle">Stored commitments</text>
+  <text x="712" y="106" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">sum · average · participants</text>
+  <text x="712" y="130" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">plus the median score</text>
+  <rect x="620" y="150" width="184" height="48" rx="8" fill="#2a221c" stroke="#c4a574" stroke-width="1.4"/>
+  <text x="712" y="180" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">No trusted aggregator key</text>
+</svg>
+</figure>
+      <ul class="summary">
+        <li>Anyone calls <code>attest</code> with the four vectors in calldata. They are not written into the maps.</li>
+        <li>For each client the contract recomputes the L1 and the hash. A mismatch reverts (<code>ScoreMismatch</code> or <code>HashMismatch</code>).</li>
+        <li>It then stores <code>sum_commitment</code>, <code>avg_commitment</code>, <code>set_commitment</code>, and <code>median_score</code>.</li>
+        <li>Integer FedAvg of all four clients is <code>(11, 11, 12, 13)</code>; without D it is <code>(1, 1, 3, 4)</code>. Division truncates toward zero.</li>
+        <li>Lower median of <code>[10, 10, 11, 160]</code> is <code>10</code>. Bound <code>20</code>, so only D is an outlier.</li>
+        <li><code>previewAverage</code> is a pure view so the shell can ask the chain for the commitment.</li>
+        <li>Tests: <code>test_stage2_attest_fedavg</code>, <code>test_stage2_bad_opening</code>.</li>
+      </ul>
+
+      <h2>Integer FedAvg, median, and the participant set</h2>
+      
+<figure class="excerpt">
+  <header>
+    <span class="path">src/agg.fe — Commitment trait</span>
+    <a href="#source/src/agg.fe" data-open-source="src/agg.fe">Open in Source</a>
+  </header>
+  <pre data-lang="fe" data-start="33"><code>/// Anything that can be committed as a keccak word-string.
+pub trait Commitment {
+    fn commit(self) -&gt; u256
+}
+
+impl Commitment for Coords {
+    fn commit(self) -&gt; u256 {
+        keccak_words([
+            IntWord::to_word(self.c0),
+            IntWord::to_word(self.c1),
+            IntWord::to_word(self.c2),
+            IntWord::to_word(self.c3),
+        ])
+    }
+}</code></pre>
+</figure>
+
+      
+<figure class="excerpt">
+  <header>
+    <span class="path">src/agg.fe — integer fedavg</span>
+    <a href="#source/src/agg.fe" data-open-source="src/agg.fe">Open in Source</a>
+  </header>
+  <pre data-lang="fe" data-start="118"><code>/// Integer FedAvg over the first `count` rows. Division truncates toward zero.
+/// `count` must be in 1..=4. The tail of `rows` is ignored.
+pub fn fedavg(_ rows: [Coords; 4], _ count: usize) -&gt; Average {
+    var sum0: i256 = 0
+    var sum1: i256 = 0
+    var sum2: i256 = 0
+    var sum3: i256 = 0
+    var index: usize = 0
+    while index &lt; count {
+        sum0 = sum0 + (rows[index].c0 as i256)
+        sum1 = sum1 + (rows[index].c1 as i256)
+        sum2 = sum2 + (rows[index].c2 as i256)
+        sum3 = sum3 + (rows[index].c3 as i256)
+        index = index + 1
+    }
+    let n = IntWord::to_word(count)
+    let avg0 = mean_coord(sum0, n)
+    let avg1 = mean_coord(sum1, n)
+    let avg2 = mean_coord(sum2, n)
+    let avg3 = mean_coord(sum3, n)
+    Average {
+        sum0,
+        sum1,
+        sum2,
+        sum3,
+        avg0,
+        avg1,
+        avg2,
+        avg3,
+        count: n,
+        sum_commitment: keccak_words([
+            IntWord::to_word(sum0),
+            IntWord::to_word(sum1),
+            IntWord::to_word(sum2),
+            IntWord::to_word(sum3),
+        ]),
+        avg_commitment: keccak_words([
+            IntWord::to_word(avg0),
+            IntWord::to_word(avg1),
+            IntWord::to_word(avg2),
+            IntWord::to_word(avg3),
+        ]),
+    }</code></pre>
+</figure>
+
+      
+<figure class="excerpt">
+  <header>
+    <span class="path">src/agg.fe — median, outlier, participant set</span>
+    <a href="#source/src/agg.fe" data-open-source="src/agg.fe">Open in Source</a>
+  </header>
+  <pre data-lang="fe" data-start="181"><code>pub fn median(_ scores: [u256; 4], _ count: usize) -&gt; u256 {
+    var sorted = scores
+    sort_prefix(mut sorted, count)
+    let index = (count - 1) / 2
+    sorted[index]
+}
+
+pub fn is_outlier(_ score: u256, _ median_score: u256) -&gt; bool {
+    let distance = if score &gt; median_score { score - median_score } else { median_score - score }
+    distance &gt; OUTLIER_BOUND
+}
+
+/// Keccak of (count, sorted client words, zero tail). Address 0 is not a client.
+pub fn participant_commitment(_ words: [u256; 4], _ count: usize) -&gt; u256 {
+    var sorted = words
+    sort_prefix(mut sorted, count)
+    var index = count
+    while index &lt; 4 {
+        sorted[index] = 0
+        index = index + 1
+    }
+    keccak_words([IntWord::to_word(count), sorted[0], sorted[1], sorted[2], sorted[3]])
+}</code></pre>
+</figure>
+
+      
+<figure class="excerpt">
+  <header>
+    <span class="path">src/ledger.fe — Ledger::attest</span>
+    <a href="#source/src/ledger.fe" data-open-source="src/ledger.fe">Open in Source</a>
+  </header>
+  <pre data-lang="fe" data-start="220"><code>    pub fn attest(
+        mut self, _ round_id: u256, _ clients: [Address; 4], _ c0: [i64; 4], _ c1: [i64; 4], _ c2: [i64; 4], _ c3: [i64; 4], _ count: u256) {
+        self.open_and_check(
+            round_id,
+            clients,
+            c0,
+            c1,
+            c2,
+            c3,
+            count,
+            false,
+        )
+    }
+
+    pub fn revise(
+        mut self, _ round_id: u256, _ clients: [Address; 4], _ c0: [i64; 4], _ c1: [i64; 4], _ c2: [i64; 4], _ c3: [i64; 4], _ count: u256) {
+        self.open_and_check(
+            round_id,
+            clients,
+            c0,
+            c1,</code></pre>
+</figure>
+
+      
+<figure class="excerpt">
+  <header>
+    <span class="path">src/lib.fe — Attest message</span>
+    <a href="#source/src/lib.fe" data-open-source="src/lib.fe">Open in Source</a>
+  </header>
+  <pre data-lang="fe" data-start="28"><code>    #[selector = sol(&quot;attest(uint256,address[4],int64[4],int64[4],int64[4],int64[4],uint256)&quot;)]
+    Attest {
+        round_id: u256,
+        clients: [Address; 4],
+        c0: [i64; 4],
+        c1: [i64; 4],
+        c2: [i64; 4],
+        c3: [i64; 4],
+        count: u256,
+    },</code></pre>
+</figure>
+
+      
+<figure class="excerpt">
+  <header>
+    <span class="path">src/lib.fe — Attest handler</span>
+    <a href="#source/src/lib.fe" data-open-source="src/lib.fe">Open in Source</a>
+  </header>
+  <pre data-lang="fe" data-start="154"><code>        Attest { round_id, clients, c0, c1, c2, c3, count } uses (mut ledger, mut log) {
+            ledger.attest(round_id, clients, c0, c1, c2, c3, count)
+            log.emit(FedAvgAttested {
+                round_id,
+                sum_commitment: ledger.sum_commitment(round_id),
+                avg_commitment: ledger.avg_commitment(round_id),
+                set_commitment: ledger.set_commitment(round_id),
+                participants: ledger.attested_count(round_id),
+            })
+        }</code></pre>
+</figure>
+
+    </section>
+
+    <section class="panel" role="tabpanel" id="panel-slash" aria-labelledby="tab-slash" hidden>
+      <p class="kicker">Chapter 3</p>
+      <h1>A bonded vote can slash an outlier and revise the average</h1>
+      <figure class="diagram"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 230" role="img" aria-label="A peer posts a bond and accuses an update. Others vote. If the score is far from the median and the vote holds, the outlier is slashed and the average is revised. A false accusation slashes the accuser instead.">
+
+  <defs>
+    <linearGradient id="poison_slash_13_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <pattern id="poison_slash_13_hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#8a7248" stroke-width="1.1" stroke-opacity="0.55"/>
+    </pattern>
+    <marker id="poison_slash_13_arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#c4a574"/>
+    </marker>
+    <marker id="poison_slash_13_arr-bright" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#e0c894"/>
+    </marker>
+  </defs>
+
+  <!-- flow of 5 compact stages -->
+  <rect x="10" y="36" width="150" height="120" rx="12" fill="#1a1512" stroke="url(#poison_slash_13_brass)" stroke-width="1.5"/>
+  <circle cx="36" cy="60" r="12" fill="#120e0c" stroke="#c4a574" stroke-width="1.3"/>
+  <text x="36" y="65" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">1</text>
+  <text x="100" y="66" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">Accuse</text>
+  <circle cx="85" cy="112" r="20" fill="#221c18" stroke="#c4a574" stroke-width="1.4"/>
+  <text x="85" y="116" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle">Bond</text>
+  <text x="85" y="148" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">A names D</text>
+
+  <path d="M160 96 H186" stroke="#c4a574" stroke-width="1.6" marker-end="url(#poison_slash_13_arr)"/>
+
+  <rect x="190" y="36" width="150" height="120" rx="12" fill="#1a1512" stroke="url(#poison_slash_13_brass)" stroke-width="1.5"/>
+  <circle cx="216" cy="60" r="12" fill="#120e0c" stroke="#c4a574" stroke-width="1.3"/>
+  <text x="216" y="65" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">2</text>
+  <text x="280" y="66" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">Vote</text>
+  <text x="265" y="112" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">B stakes a vote</text>
+  <text x="265" y="148" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">Vote bonds return</text>
+
+  <path d="M340 96 H366" stroke="#c4a574" stroke-width="1.6" marker-end="url(#poison_slash_13_arr)"/>
+
+  <rect x="370" y="36" width="200" height="120" rx="12" fill="#1a1512" stroke="url(#poison_slash_13_brass)" stroke-width="1.5"/>
+  <circle cx="396" cy="60" r="12" fill="#120e0c" stroke="#c4a574" stroke-width="1.3"/>
+  <text x="396" y="65" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">3</text>
+  <text x="480" y="66" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">Resolve</text>
+  <text x="470" y="104" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">Far from the median</text>
+  <text x="470" y="124" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">and the vote holds?</text>
+  <text x="470" y="148" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">then slash D</text>
+
+  <path d="M570 96 H596" stroke="#c4a574" stroke-width="1.6" marker-end="url(#poison_slash_13_arr-bright)"/>
+
+  <rect x="600" y="20" width="248" height="86" rx="12" fill="#2a221c" stroke="#e0c894" stroke-width="1.6"/>
+  <text x="724" y="50" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">Upheld — slash D, pay A</text>
+  <text x="724" y="74" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">Then revise the average without D</text>
+
+  <rect x="600" y="118" width="248" height="50" rx="10" fill="#1a1512" stroke="#5c4a38" stroke-width="1.4"/>
+  <text x="724" y="148" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#a89888" text-anchor="middle">False charge — accuser loses the bond</text>
+
+  <rect x="600" y="176" width="248" height="40" rx="10" fill="#1a1512" stroke="#3d3229" stroke-width="1.3"/>
+  <text x="724" y="201" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">No votes — bond comes back, no slash</text>
+</svg>
+</figure>
+      <ol class="steps">
+        <li><span class="step-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Bond">
+
+  <defs>
+    <linearGradient id="bond_14_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <linearGradient id="bond_14_ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1714"/>
+      <stop offset="100%" stop-color="#0a0807"/>
+    </linearGradient>
+  </defs>
+
+
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#bond_14_ink)" stroke="url(#bond_14_brass)" stroke-width="1.75"/>
+  <rect x="7" y="7" width="50" height="50" rx="10" fill="none" stroke="#c4a574" stroke-opacity="0.35" stroke-width="0.75"/>
+
+
+  <circle cx="32" cy="32" r="12" stroke="url(#bond_14_brass)" stroke-width="1.7"/>
+  <circle cx="32" cy="32" r="8" stroke="#c4a574" stroke-opacity="0.4" stroke-width="0.9"/>
+  <path d="M32 26 V38 M28.5 29 C28.5 27.2 30 26.2 32 26.2 C34.4 26.2 35.6 27.4 35.6 29.1 C35.6 31.6 32 31.8 32 31.8 C32 31.8 28.3 32.2 28.3 34.8 C28.3 36.6 29.8 37.8 32 37.8 C34.2 37.8 35.6 36.6 35.6 34.8" stroke="#e0c894" stroke-width="1.45" stroke-linecap="round"/>
+
+</svg>
+</span><div>After attestation, client A posts <code>bond</code> and accuses D.</div></li>
+        <li><span class="step-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Check">
+
+  <defs>
+    <linearGradient id="check_15_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <linearGradient id="check_15_ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1714"/>
+      <stop offset="100%" stop-color="#0a0807"/>
+    </linearGradient>
+  </defs>
+
+
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#check_15_ink)" stroke="url(#check_15_brass)" stroke-width="1.75"/>
+  <rect x="7" y="7" width="50" height="50" rx="10" fill="none" stroke="#c4a574" stroke-opacity="0.35" stroke-width="0.75"/>
+
+
+  <circle cx="32" cy="32" r="13" stroke="url(#check_15_brass)" stroke-width="1.7"/>
+  <path d="M24 33 L29.5 39 L42 25" stroke="#e0c894" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+
+</svg>
+</span><div>Client B posts <code>vote_bond</code> in support.</div></li>
+        <li><span class="step-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Bond and slash">
+
+  <defs>
+    <linearGradient id="slash_16_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <linearGradient id="slash_16_ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1714"/>
+      <stop offset="100%" stop-color="#0a0807"/>
+    </linearGradient>
+  </defs>
+
+
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#slash_16_ink)" stroke="url(#slash_16_brass)" stroke-width="1.75"/>
+  <rect x="7" y="7" width="50" height="50" rx="10" fill="none" stroke="#c4a574" stroke-opacity="0.35" stroke-width="0.75"/>
+
+
+  <circle cx="32" cy="30" r="11" stroke="url(#slash_16_brass)" stroke-width="1.7"/>
+  <path d="M32 23 V30 L37 33" stroke="#e0c894" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M21 46 L43 18" stroke="#e0c894" stroke-width="2" stroke-linecap="round"/>
+
+</svg>
+</span><div>Anyone calls <code>resolve</code>.</div></li>
+        <li><span class="step-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Poisoned update">
+
+  <defs>
+    <linearGradient id="poison_17_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <linearGradient id="poison_17_ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1714"/>
+      <stop offset="100%" stop-color="#0a0807"/>
+    </linearGradient>
+  </defs>
+
+
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#poison_17_ink)" stroke="url(#poison_17_brass)" stroke-width="1.75"/>
+  <rect x="7" y="7" width="50" height="50" rx="10" fill="none" stroke="#c4a574" stroke-opacity="0.35" stroke-width="0.75"/>
+
+
+  <path d="M18 44 L28 28 L36 36 L46 16" stroke="url(#poison_17_brass)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M42 16 L46 16 L46 21" stroke="#e0c894" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="46" cy="16" r="2.2" fill="#e0c894"/>
+
+</svg>
+</span><div>D is an outlier and support beats oppose, so the verdict is <strong>upheld</strong> (code <code>1</code>). D is slashed; half to A, half to <code>treasury</code>. D's receipt is marked <code>poisoned</code>.</div></li>
+        <li><span class="step-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Revised average">
+
+  <defs>
+    <linearGradient id="revise_18_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <linearGradient id="revise_18_ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1714"/>
+      <stop offset="100%" stop-color="#0a0807"/>
+    </linearGradient>
+  </defs>
+
+
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#revise_18_ink)" stroke="url(#revise_18_brass)" stroke-width="1.75"/>
+  <rect x="7" y="7" width="50" height="50" rx="10" fill="none" stroke="#c4a574" stroke-opacity="0.35" stroke-width="0.75"/>
+
+
+  <path d="M44 28 A12 12 0 1 0 42 40" stroke="url(#revise_18_brass)" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M44 21 V28 H37" stroke="#e0c894" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M26 32 H38" stroke="#e0c894" stroke-width="1.5" stroke-linecap="round"/>
+
+</svg>
+</span><div><code>revise</code> opens only A, B, and C. The new average is the honest FedAvg. The round becomes <code>Settled</code>.</div></li>
+      </ol>
+      <ul class="summary">
+        <li><strong>False accusation</strong> (code <code>2</code>): accusing B (score <code>11</code>) fails the outlier check. A's bond is slashed — half to B, half to treasury. B's stake is untouched.</li>
+        <li><strong>Failed quorum</strong> (code <code>3</code>): accusing D with no votes. A's bond is returned. D is not slashed.</li>
+        <li>Bonds are <code>Wei</code>, so a gradient cannot be added to a stake. Vote bonds are always returned.</li>
+        <li>Payouts use <code>call.send_value</code> after storage updates; a failed transfer reverts the resolution.</li>
+        <li>Tests: <code>test_stage3_upheld_slash_and_revise</code>, <code>test_stage3_false_accusation</code>, <code>test_stage3_failed_quorum</code>, <code>test_stage3_self_accusation</code>, <code>test_tour_judge_full</code>.</li>
+        <li>The full-tour test checks the contract ETH balance after payouts (3750 wei with the small test stakes).</li>
+      </ul>
+
+      <h2>Verdict math and payouts</h2>
+      
+<figure class="excerpt">
+  <header>
+    <span class="path">src/slash.fe — settle</span>
+    <a href="#source/src/slash.fe" data-open-source="src/slash.fe">Open in Source</a>
+  </header>
+  <pre data-lang="fe" data-start="17"><code>pub enum Verdict {
+    Upheld,
+    FalseAccusation,
+    FailedQuorum,
+}
+
+impl Copy for Verdict {}
+
+pub fn verdict_code(_ verdict: Verdict) -&gt; u8 {
+    match verdict {
+        Verdict::Upheld =&gt; 1,
+        Verdict::FalseAccusation =&gt; 2,
+        Verdict::FailedQuorum =&gt; 3,
+    }
+}
+
+pub struct SlashInput {
+    pub objective_outlier: bool,
+    pub support_votes: u256,
+    pub support_stake: Wei,
+    pub oppose_stake: Wei,
+    pub accuser_bond: Wei,
+    pub accused_stake: Wei,
+    pub slash_amount: Wei,
+    pub min_votes: u256,
+}
+
+pub struct SlashOutput {
+    pub verdict: Verdict,
+    pub accuser_payout: Wei,
+    pub accused_stake: Wei,
+    pub accused_compensation: Wei,
+    pub treasury_gain: Wei,
+}
+
+pub fn settle(_ input: SlashInput) -&gt; SlashOutput {
+    if !input.objective_outlier {
+        let half = input.accuser_bond / 2
+        let rest = input.accuser_bond - half
+        return SlashOutput {
+            verdict: Verdict::FalseAccusation,
+            accuser_payout: Wei::zero(),
+            accused_stake: input.accused_stake,
+            accused_compensation: half,
+            treasury_gain: rest,
+        }
+    }
+
+    let quorum = input.support_votes &gt;= input.min_votes &amp;&amp; input.support_stake &gt; input.oppose_stake
+    if !quorum {
+        return SlashOutput {
+            verdict: Verdict::FailedQuorum,
+            accuser_payout: input.accuser_bond,
+            accused_stake: input.accused_stake,
+            accused_compensation: Wei::zero(),
+            treasury_gain: Wei::zero(),
+        }
+    }
+
+    let taken = if input.slash_amount &gt; input.accused_stake {
+        input.accused_stake
+    } else {
+        input.slash_amount
+    }
+    let bounty = taken / 2
+    let treasury = taken - bounty
+    SlashOutput {
+        verdict: Verdict::Upheld,
+        accuser_payout: input.accuser_bond + bounty,
+        accused_stake: input.accused_stake - taken,
+        accused_compensation: Wei::zero(),
+        treasury_gain: treasury,
+    }
+}</code></pre>
+</figure>
+
+      
+<figure class="excerpt">
+  <header>
+    <span class="path">src/ledger.fe — accuse, vote, resolve</span>
+    <a href="#source/src/ledger.fe" data-open-source="src/ledger.fe">Open in Source</a>
+  </header>
+  <pre data-lang="fe" data-start="372"><code>        self.next_accusation = id + 1
+        var accusation = self.accusations.get(key: id)
+        accusation.exists = true
+        accusation.resolved = false
+        accusation.round_id = round_id
+        accusation.accuser = accuser
+        accusation.accused = accused
+        accusation.bond = value
+        accusation.support_stake = Wei::zero()
+        accusation.oppose_stake = Wei::zero()
+        accusation.support_votes = 0
+        accusation.oppose_votes = 0
+        accusation.voter_count = 0
+        self.accusations.set(key: id, value: accusation)
+        self.accusation_of.set(key: (round_id, accused), value: id)
+        id
+    }
+
+    pub fn vote(mut self, _ voter: Address, _ accusation_id: u256, _ support: bool, _ value: Wei) {
+        if value != self.vote_bond {
+            revert_error(BadBond { sent: value.as_wei(), required: self.vote_bond.as_wei() })
+        }
+        var accusation = self.accusations.get(key: accusation_id)
+        if !accusation.exists || accusation.resolved {
+            revert_error(BadAccusation {})
+        }
+        if voter == accusation.accuser || voter == accusation.accused {
+            revert_error(NotAPeer {})
+        }
+        let client = self.clients.get(key: voter)
+        if !client.registered {
+            revert_error(NotRegistered {})
+        }
+        if accusation.voter_count == 4 {
+            revert_error(TooManyVoters {})
+        }
+        let n = as_index(accusation.voter_count)
+        var index: usize = 0
+        while index &lt; n {
+            if accusation.voters[index] == voter {
+                revert_error(AlreadyVoted {})
+            }
+            index = index + 1
+        }
+        accusation.voters[n] = voter
+        accusation.voter_count = accusation.voter_count + 1
+        if support {
+            accusation.support_votes = accusation.support_votes + 1
+            accusation.support_stake = accusation.support_stake + value
+        } else {
+            accusation.oppose_votes = accusation.oppose_votes + 1
+            accusation.oppose_stake = accusation.oppose_stake + value
+        }
+        self.accusations.set(key: accusation_id, value: accusation)
+    }
+
+    pub fn resolve(mut self, _ accusation_id: u256) -&gt; Payout {
+        var accusation = self.accusations.get(key: accusation_id)
+        if !accusation.exists || accusation.resolved {
+            revert_error(BadAccusation {})
+        }
+        let round = self.rounds.get(key: accusation.round_id)
+        require_phase(phase: round.phase, expected: Phase::Attested)
+        let receipt = self.receipts.get(key: (accusation.round_id, accusation.accused))
+        let outlier = is_outlier(score: receipt.score, median_score: round.median_score)
+        var accused = self.clients.get(key: accusation.accused)
+        let output = settle(SlashInput {
+            objective_outlier: outlier,
+            support_votes: accusation.support_votes,
+            support_stake: accusation.support_stake,
+            oppose_stake: accusation.oppose_stake,
+            accuser_bond: accusation.bond,
+            accused_stake: accused.stake,
+            slash_amount: self.slash_amount,
+            min_votes: MIN_VOTES,
+        })
+        accused.stake = output.accused_stake
+        self.clients.set(key: accusation.accused, value: accused)
+        if verdict_code(output.verdict) == verdict_code(Verdict::Upheld) {
+            var marked = receipt
+            marked.poisoned = true
+            self.receipts.set(key: (accusation.round_id, accusation.accused), value: marked)
+        }
+        accusation.resolved = true
+        self.accusations.set(key: accusation_id, value: accusation)
+        self.treasury = self.treasury + output.treasury_gain
+        Payout {
+            accuser: accusation.accuser,
+            accuser_amount: output.accuser_payout,
+            accused: accusation.accused,
+            accused_amount: output.accused_compensation,
+            voters: accusation.voters,
+            voter_count: accusation.voter_count,
+            voter_refund: self.vote_bond,
+            verdict: verdict_code(output.verdict),
+            treasury_gain: output.treasury_gain,
+        }
+    }
+
+    pub fn phase_of(self, _ round_id: u256) -&gt; u8 {
+        phase_code(self.rounds.get(key: round_id).phase)
+    }
+
+    pub fn stake_of(self, _ who: Address) -&gt; Wei {
+        self.clients.get(key: who).stake
+    }
+
+    pub fn registered(self, _ who: Address) -&gt; bool {
+        self.clients.get(key: who).registered
+    }
+
+    pub fn receipt_count(self, _ round_id: u256) -&gt; u256 {
+        self.rounds.get(key: round_id).receipt_count
+    }
+
+    pub fn sum_commitment(self, _ round_id: u256) -&gt; u256 {
+        self.rounds.get(key: round_id).sum_commitment
+    }
+
+    pub fn avg_commitment(self, _ round_id: u256) -&gt; u256 {
+        self.rounds.get(key: round_id).avg_commitment
+    }
+</code></pre>
+</figure>
+
+      
+<figure class="excerpt">
+  <header>
+    <span class="path">src/ledger.fe — revise</span>
+    <a href="#source/src/ledger.fe" data-open-source="src/ledger.fe">Open in Source</a>
+  </header>
+  <pre data-lang="fe" data-start="242"><code>            c3,
+            count,
+            true,
+        )
+    }
+
+    fn open_and_check(
+        mut self, _ round_id: u256, _ clients: [Address; 4], _ c0: [i64; 4], _ c1: [i64; 4], _ c2: [i64; 4], _ c3: [i64; 4], _ count: u256, _ revising: bool) {
+        if count == 0 || count &gt; 4 {
+            revert_error(BadCount { count })
+        }
+        let n = as_index(count)
+        var round = self.rounds.get(key: round_id)
+        if revising {
+            require_phase(phase: round.phase, expected: Phase::Attested)
+        } else {
+            require_phase(phase: round.phase, expected: Phase::Open)
+        }
+
+        var rows: [Coords; 4] = [zero_coords(), zero_coords(), zero_coords(), zero_coords()]
+        var scores: [u256; 4] = [0, 0, 0, 0]</code></pre>
+</figure>
+
+      
+<figure class="excerpt">
+  <header>
+    <span class="path">src/lib.fe — Accuse, Vote, Resolve</span>
+    <a href="#source/src/lib.fe" data-open-source="src/lib.fe">Open in Source</a>
+  </header>
+  <pre data-lang="fe" data-start="175"><code>        Accuse { round_id, accused } -&gt; u256 uses (mut ledger, ctx, mut log) {
+            let caller = ctx.caller()
+            let id = ledger.accuse(caller, round_id, accused, ctx.value())
+            log.emit(PoisonAccused { accusation_id: id, accuser: caller, accused, bond: ctx.value() })
+            id
+        }
+
+        #[payable]
+        Vote { accusation_id, support } uses (mut ledger, ctx, mut log) {
+            let caller = ctx.caller()
+            ledger.vote(caller, accusation_id, support, ctx.value())
+            log.emit(PoisonVoted { accusation_id, voter: caller, support })
+        }
+
+        Resolve { accusation_id } -&gt; u8 uses (mut ledger, mut call, mut log) {
+            let payout = ledger.resolve(accusation_id)
+            send_payout(payout)
+            log.emit(AccusationResolved {
+                accusation_id,
+                verdict: payout.verdict,
+                accuser_payout: payout.accuser_amount,
+                treasury_gain: payout.treasury_gain,
+            })</code></pre>
+</figure>
+
+      
+<figure class="excerpt">
+  <header>
+    <span class="path">src/lib.fe — send / send_payout</span>
+    <a href="#source/src/lib.fe" data-open-source="src/lib.fe">Open in Source</a>
+  </header>
+  <pre data-lang="fe" data-start="296"><code>fn send(_ to: Address, _ amount: Wei) uses (call: mut Call) {
+    if amount.as_wei() == 0 {
+        return
+    }
+    let outcome = call.send_value(addr: to, gas: 100000, value: amount)
+    if !outcome.success() {
+        revert_error(PayoutFailed {})
+    }
+}
+
+fn send_payout(_ payout: Payout) uses (call: mut Call) {
+    send(to: payout.accuser, amount: payout.accuser_amount)
+    send(to: payout.accused, amount: payout.accused_amount)
+    var index: usize = 0
+    while index &lt; 4 {
+        if index == 0 &amp;&amp; payout.voter_count == 0 {
+            return
+        }
+        if index == 1 &amp;&amp; payout.voter_count &lt; 2 {
+            return
+        }
+        if index == 2 &amp;&amp; payout.voter_count &lt; 3 {
+            return
+        }
+        if index == 3 &amp;&amp; payout.voter_count &lt; 4 {</code></pre>
+</figure>
+
+    </section>
+
+    <section class="panel" role="tabpanel" id="panel-run" aria-labelledby="tab-run" hidden>
+      <p class="kicker">Eight stages, teardown last</p>
+      <h1>Replay the recorded tour, or run it locally with Fe 26.5.0</h1>
+      <figure class="diagram"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 140" role="img" aria-label="Toolchain: Fe 26.5.0, then fe test and e2e.sh --ci, then Anvil Osaka.">
+
+  <defs>
+    <linearGradient id="run_toolchain_19_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <pattern id="run_toolchain_19_hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#8a7248" stroke-width="1.1" stroke-opacity="0.55"/>
+    </pattern>
+    <marker id="run_toolchain_19_arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#c4a574"/>
+    </marker>
+    <marker id="run_toolchain_19_arr-bright" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#e0c894"/>
+    </marker>
+  </defs>
+
+  <rect x="16" y="28" width="240" height="84" rx="12" fill="#1a1512" stroke="url(#run_toolchain_19_brass)" stroke-width="1.6"/>
+  <text x="136" y="68" font-family="Cormorant Garamond, Georgia, serif" font-size="22" fill="#f3ebe0" font-weight="600" text-anchor="middle">Fe 26.5.0</text>
+  <text x="136" y="90" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">3dab95f · pinned exactly</text>
+  <path d="M256 70 H300" stroke="#c4a574" stroke-width="1.8" marker-end="url(#run_toolchain_19_arr-bright)"/>
+  <rect x="308" y="28" width="260" height="84" rx="12" fill="#1a1512" stroke="url(#run_toolchain_19_brass)" stroke-width="1.6"/>
+  <text x="438" y="68" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="16" fill="#f3ebe0" text-anchor="middle">fe test  /  e2e.sh --ci</text>
+  <text x="438" y="90" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">20 unit tests · 8 e2e stages</text>
+  <path d="M568 70 H612" stroke="#c4a574" stroke-width="1.8" marker-end="url(#run_toolchain_19_arr-bright)"/>
+  <rect x="620" y="28" width="224" height="84" rx="12" fill="#2a221c" stroke="url(#run_toolchain_19_brass)" stroke-width="1.6"/>
+  <text x="732" y="68" font-family="Cormorant Garamond, Georgia, serif" font-size="22" fill="#f3ebe0" font-weight="600" text-anchor="middle">Anvil Osaka</text>
+  <text x="732" y="90" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">the on-chain judge tour</text>
+</svg>
+</figure>
+      <ul class="summary">
+        <li>This explorer is static. Fe and Anvil are not executed here.</li>
+        <li>Each button replays the verified 24 November 2026 (Asia/Hong_Kong) log for that stage.</li>
+        <li>To run it yourself: clone the repo, install Fe 26.5.0 and Foundry, then <code>./scripts/e2e.sh --ci</code> or <code>--stage N</code>.</li>
+        <li>A passing run prints <code>PASS  8 stages, 0 failed</code>, with teardown last.</li>
+      </ul>
+      <div class="stage-deck" id="stage-deck">
+  <div class="actions">
+    <button type="button" class="btn" data-run-all>Run all 8 stages</button>
+    <button type="button" class="btn secondary" data-copy="./scripts/e2e.sh --ci">Copy --ci command</button>
+  </div>
+  <div class="stage-grid">
+    <article class="stage-card">
+  <div class="stage-card-head"><span class="step-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Fe 26.5.0">
+
+  <defs>
+    <linearGradient id="fe_20_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <linearGradient id="fe_20_ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1714"/>
+      <stop offset="100%" stop-color="#0a0807"/>
+    </linearGradient>
+  </defs>
+
+
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#fe_20_ink)" stroke="url(#fe_20_brass)" stroke-width="1.75"/>
+  <rect x="7" y="7" width="50" height="50" rx="10" fill="none" stroke="#c4a574" stroke-opacity="0.35" stroke-width="0.75"/>
+
+
+  <path d="M22 42 V22 H40" stroke="url(#fe_20_brass)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M22 32 H35" stroke="#e0c894" stroke-width="2" stroke-linecap="round"/>
+
+</svg>
+</span><span class="stage-num">1</span><h3>toolchain</h3></div>
+  <p class="stage-title">Fe 26.5.0 and Foundry on PATH</p>
+  <div class="actions">
+    <button type="button" class="btn" data-stage="1">Run stage 1</button>
+    <button type="button" class="btn secondary" data-copy="./scripts/e2e.sh --stage 1">Copy command</button>
+  </div>
+</article><article class="stage-card">
+  <div class="stage-card-head"><span class="step-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Source tree">
+
+  <defs>
+    <linearGradient id="source_21_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <linearGradient id="source_21_ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1714"/>
+      <stop offset="100%" stop-color="#0a0807"/>
+    </linearGradient>
+  </defs>
+
+
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#source_21_ink)" stroke="url(#source_21_brass)" stroke-width="1.75"/>
+  <rect x="7" y="7" width="50" height="50" rx="10" fill="none" stroke="#c4a574" stroke-opacity="0.35" stroke-width="0.75"/>
+
+
+  <rect x="20" y="18" width="18" height="22" rx="2.5" stroke="url(#source_21_brass)" stroke-width="1.6"/>
+  <rect x="26" y="24" width="18" height="22" rx="2.5" fill="url(#source_21_ink)" stroke="url(#source_21_brass)" stroke-width="1.6"/>
+  <path d="M30 32 H40 M30 36.5 H38" stroke="#e0c894" stroke-width="1.3" stroke-linecap="round"/>
+
+</svg>
+</span><span class="stage-num">2</span><h3>build</h3></div>
+  <p class="stage-title">fe build --out-dir out</p>
+  <div class="actions">
+    <button type="button" class="btn" data-stage="2">Run stage 2</button>
+    <button type="button" class="btn secondary" data-copy="./scripts/e2e.sh --stage 2">Copy command</button>
+  </div>
+</article><article class="stage-card">
+  <div class="stage-card-head"><span class="step-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Hash receipt">
+
+  <defs>
+    <linearGradient id="hash_22_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <linearGradient id="hash_22_ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1714"/>
+      <stop offset="100%" stop-color="#0a0807"/>
+    </linearGradient>
+  </defs>
+
+
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#hash_22_ink)" stroke="url(#hash_22_brass)" stroke-width="1.75"/>
+  <rect x="7" y="7" width="50" height="50" rx="10" fill="none" stroke="#c4a574" stroke-opacity="0.35" stroke-width="0.75"/>
+
+
+  <path d="M26 20 V44 M38 20 V44 M20 28 H44 M20 36 H44" stroke="url(#hash_22_brass)" stroke-width="1.8" stroke-linecap="round"/>
+
+</svg>
+</span><span class="stage-num">3</span><h3>unit</h3></div>
+  <p class="stage-title">pure FedAvg, hash, and slash tests</p>
+  <div class="actions">
+    <button type="button" class="btn" data-stage="3">Run stage 3</button>
+    <button type="button" class="btn secondary" data-copy="./scripts/e2e.sh --stage 3">Copy command</button>
+  </div>
+</article><article class="stage-card">
+  <div class="stage-card-head"><span class="step-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Receipt">
+
+  <defs>
+    <linearGradient id="receipt_23_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <linearGradient id="receipt_23_ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1714"/>
+      <stop offset="100%" stop-color="#0a0807"/>
+    </linearGradient>
+  </defs>
+
+
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#receipt_23_ink)" stroke="url(#receipt_23_brass)" stroke-width="1.75"/>
+  <rect x="7" y="7" width="50" height="50" rx="10" fill="none" stroke="#c4a574" stroke-opacity="0.35" stroke-width="0.75"/>
+
+
+  <rect x="22" y="18" width="20" height="28" rx="3.5" stroke="url(#receipt_23_brass)" stroke-width="1.7"/>
+  <path d="M26.5 26.5 H37.5 M26.5 31.5 H37.5 M26.5 36.5 H33" stroke="#e0c894" stroke-width="1.45" stroke-linecap="round"/>
+
+</svg>
+</span><span class="stage-num">4</span><h3>chapter 1</h3></div>
+  <p class="stage-title">register, open round, submit receipts</p>
+  <div class="actions">
+    <button type="button" class="btn" data-stage="4">Run stage 4</button>
+    <button type="button" class="btn secondary" data-copy="./scripts/e2e.sh --stage 4">Copy command</button>
+  </div>
+</article><article class="stage-card">
+  <div class="stage-card-head"><span class="step-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Checkable average">
+
+  <defs>
+    <linearGradient id="attest_24_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <linearGradient id="attest_24_ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1714"/>
+      <stop offset="100%" stop-color="#0a0807"/>
+    </linearGradient>
+  </defs>
+
+
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#attest_24_ink)" stroke="url(#attest_24_brass)" stroke-width="1.75"/>
+  <rect x="7" y="7" width="50" height="50" rx="10" fill="none" stroke="#c4a574" stroke-opacity="0.35" stroke-width="0.75"/>
+
+
+  <path d="M20 34 L28 22 L36 34 L44 22" stroke="url(#attest_24_brass)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M20 42 H44" stroke="#8a7248" stroke-width="1.3" stroke-linecap="round"/>
+  <path d="M26 42 L31 47 L40 36" stroke="#e0c894" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+
+</svg>
+</span><span class="stage-num">5</span><h3>chapter 2</h3></div>
+  <p class="stage-title">FedAvg attestation</p>
+  <div class="actions">
+    <button type="button" class="btn" data-stage="5">Run stage 5</button>
+    <button type="button" class="btn secondary" data-copy="./scripts/e2e.sh --stage 5">Copy command</button>
+  </div>
+</article><article class="stage-card">
+  <div class="stage-card-head"><span class="step-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Bond and slash">
+
+  <defs>
+    <linearGradient id="slash_25_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <linearGradient id="slash_25_ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1714"/>
+      <stop offset="100%" stop-color="#0a0807"/>
+    </linearGradient>
+  </defs>
+
+
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#slash_25_ink)" stroke="url(#slash_25_brass)" stroke-width="1.75"/>
+  <rect x="7" y="7" width="50" height="50" rx="10" fill="none" stroke="#c4a574" stroke-opacity="0.35" stroke-width="0.75"/>
+
+
+  <circle cx="32" cy="30" r="11" stroke="url(#slash_25_brass)" stroke-width="1.7"/>
+  <path d="M32 23 V30 L37 33" stroke="#e0c894" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M21 46 L43 18" stroke="#e0c894" stroke-width="2" stroke-linecap="round"/>
+
+</svg>
+</span><span class="stage-num">6</span><h3>chapter 3</h3></div>
+  <p class="stage-title">poison vote, slash, revise</p>
+  <div class="actions">
+    <button type="button" class="btn" data-stage="6">Run stage 6</button>
+    <button type="button" class="btn secondary" data-copy="./scripts/e2e.sh --stage 6">Copy command</button>
+  </div>
+</article><article class="stage-card">
+  <div class="stage-card-head"><span class="step-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Anvil Osaka">
+
+  <defs>
+    <linearGradient id="anvil_26_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <linearGradient id="anvil_26_ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1714"/>
+      <stop offset="100%" stop-color="#0a0807"/>
+    </linearGradient>
+  </defs>
+
+
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#anvil_26_ink)" stroke="url(#anvil_26_brass)" stroke-width="1.75"/>
+  <rect x="7" y="7" width="50" height="50" rx="10" fill="none" stroke="#c4a574" stroke-opacity="0.35" stroke-width="0.75"/>
+
+
+  <path d="M18 30 H46 L42 36 H22 Z" stroke="url(#anvil_26_brass)" stroke-width="1.7" stroke-linejoin="round"/>
+  <path d="M28 36 V44 H36 V36" stroke="url(#anvil_26_brass)" stroke-width="1.7" stroke-linejoin="round"/>
+  <path d="M22 44 H42" stroke="#e0c894" stroke-width="1.7" stroke-linecap="round"/>
+  <path d="M20 26 H32 L36 30" stroke="#8a7248" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+
+</svg>
+</span><span class="stage-num">7</span><h3>tour</h3></div>
+  <p class="stage-title">in-EVM tour plus Anvil deployment</p>
+  <div class="actions">
+    <button type="button" class="btn" data-stage="7">Run stage 7</button>
+    <button type="button" class="btn secondary" data-copy="./scripts/e2e.sh --stage 7">Copy command</button>
+  </div>
+</article><article class="stage-card">
+  <div class="stage-card-head"><span class="step-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Teardown">
+  <defs>
+    <linearGradient id="teardown_27_teardown-brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <linearGradient id="teardown_27_teardown-ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1714"/>
+      <stop offset="100%" stop-color="#0a0807"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#teardown_27_teardown-ink)" stroke="url(#teardown_27_teardown-brass)" stroke-width="1.75"/>
+  <rect x="7" y="7" width="50" height="50" rx="10" fill="none" stroke="#c4a574" stroke-opacity="0.35" stroke-width="0.75"/>
+  <path d="M20 28 H44" stroke="url(#teardown_27_teardown-brass)" stroke-width="1.7" stroke-linecap="round"/>
+  <path d="M22 36 H34 M22 41 H30" stroke="#e0c894" stroke-width="1.45" stroke-linecap="round"/>
+  <path d="M36 40 L40 44 L48 33" stroke="#e0c894" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</span><span class="stage-num">8</span><h3>teardown</h3></div>
+  <p class="stage-title">stop leftover Anvil; keep logs</p>
+  <div class="actions">
+    <button type="button" class="btn" data-stage="8">Run stage 8</button>
+    <button type="button" class="btn secondary" data-copy="./scripts/e2e.sh --stage 8">Copy command</button>
+  </div>
+</article>
+  </div>
+  <div class="stage-console" id="stage-console" hidden>
+    <header>
+      <span class="path" id="stage-meta">Recorded log</span>
+      <span class="stage-pill">Recorded PASS</span>
+    </header>
+    <pre><code id="stage-log"></code></pre>
+  </div>
+</div>
+
+      <h2>Install Fe 26.5.0, then Foundry, then clone</h2>
+      <div class="excerpt"><header><span class="path">shell</span></header>
+      <pre data-lang="bash" data-start="1"><code>curl -fsSL https://raw.githubusercontent.com/argotorg/fe/master/feup/feup.sh | bash -s -- --version v26.5.0
+source ~/.fe/env
+fe --version    # fe 26.5.0 (3dab95f)
+curl -fsSL https://foundry.paradigm.xyz | bash
+foundryup
+git clone https://github.com/kentydotcom/Fe-Builder-Challenge-2026.git
+cd Fe-Builder-Challenge-2026
+./scripts/e2e.sh --ci</code></pre></div>
+      <ul class="summary">
+        <li>Install Fe 26.5.0, not “latest” if latest has moved on.</li>
+        <li>Fe 26.5 targets Osaka; the script starts <code>anvil --hardfork osaka</code>.</li>
+        <li>Menu item 9, or <code>--ci</code>, runs all eight stages in order. Item 8 / <code>--stage 8</code> is teardown only.</li>
+        <li>Each stage writes <code>logs/e2e-&lt;timestamp&gt;/&lt;stage&gt;.log</code>. Exit 0 only if every requested stage passed.</li>
+      </ul>
+
+      <h2>Anvil is the on-chain chapter, not a second required tour</h2>
+      <ul class="summary">
+        <li><code>./scripts/anvil_tour.sh</code> after <code>fe build</code> is only for the chain story on its own. A <code>--ci</code> run already starts and stops Anvil.</li>
+        <li>It uses Anvil's published development keys on a local node; those keys are not secret and must not be used anywhere else.</li>
+        <li>On Anvil, ordinary accounts call <code>FlRegistry</code> directly. <code>Agent</code> exists only for <code>fe test</code>.</li>
+      </ul>
+
+      <div class="callout ok">
+        <p class="kicker">Documented results</p>
+        <ul class="summary">
+          <li>24 November 2026 (Asia/Hong_Kong): <code>fe test --jobs 1</code> was <strong>20 passed, 0 failed</strong>; <code>./scripts/e2e.sh --ci</code> was <strong>8 stages passed, 0 failed</strong>, teardown last. Fe 26.5.0, Foundry 1.8.4.</li>
+          <li>28 October and 11 November 2026: 20/20 and 7/7, before teardown was stage 8.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel" role="tabpanel" id="panel-walkthrough" aria-labelledby="tab-walkthrough" hidden>
+      <p class="kicker">How to read the Fe source</p>
+      <h1>From types to the full tour test</h1>
+      <figure class="diagram"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 100" role="img" aria-label="A guided read of the Fe source, from types to the full tour test.">
+
+  <defs>
+    <linearGradient id="walkthrough_guide_28_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <pattern id="walkthrough_guide_28_hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#8a7248" stroke-width="1.1" stroke-opacity="0.55"/>
+    </pattern>
+    <marker id="walkthrough_guide_28_arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#c4a574"/>
+    </marker>
+    <marker id="walkthrough_guide_28_arr-bright" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#e0c894"/>
+    </marker>
+  </defs>
+
+  <rect x="16" y="16" width="828" height="68" rx="12" fill="#1a1512" stroke="#3d3229" stroke-width="1.5"/>
+  <text x="48" y="56" font-family="Cormorant Garamond, Georgia, serif" font-size="20" fill="#f3ebe0" font-weight="600">Walkthrough</text>
+  <path d="M160 50 H190" stroke="#c4a574" stroke-width="1.5" marker-end="url(#walkthrough_guide_28_arr)"/>
+  <text x="260" y="56" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">Fe types</text>
+  <path d="M320 50 H350" stroke="#c4a574" stroke-width="1.5" marker-end="url(#walkthrough_guide_28_arr)"/>
+  <text x="420" y="56" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">A round, in order</text>
+  <path d="M520 50 H550" stroke="#c4a574" stroke-width="1.5" marker-end="url(#walkthrough_guide_28_arr)"/>
+  <text x="640" y="56" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">Tests and the Anvil tour</text>
+</svg>
+</figure>
+      <ul class="summary">
+        <li>Written for someone who has never seen Fe.</li>
+        <li>Follow the diagram, then the sections below.</li>
+      </ul>
+      <article class="walkthrough">
+        <h1 id="fe-from-nothing-then-this-project">Fe, from nothing, then this project</h1>
+<p>You do not need to have written Fe before. This file gets a compiler onto the machine, runs a twenty-line contract, and then walks the federated-learning judge tour file by file.</p>
+<p>The contest asks for Fe <strong>26.5.0 or newer</strong>. This repo is pinned to <strong>26.5.0</strong> exactly, so a judge and you run the same compiler. Check with <code>fe --version</code>. It should print <code>fe 26.5.0</code> and a short commit (<code>3dab95f</code> for the release this prototype was built with).</p>
+<p>Fe looks like Rust and compiles to EVM bytecode. A contract does not have Solidity <code>function</code>s. It has a <code>msg</code> enum (the ABI) and a <code>recv</code> block (the code that runs when a message arrives). Effects such as "I am writing storage" or "I am sending ETH" are written in the signature. The compiler rejects a handler that touches storage without saying so.</p>
+<p>Fe 26.x is not production-ready. The team says that in the compiler README. Learn it here. Do not point it at mainnet.</p>
+<h2 id="1-install-fe-2650">1. Install Fe 26.5.0</h2>
+<p>Linux or macOS:</p>
+<pre><code class="language-bash">curl -fsSL https://raw.githubusercontent.com/argotorg/fe/master/feup/feup.sh | bash -s -- --version v26.5.0
+source ~/.fe/env
+fe --version
+</code></pre>
+<p><code>feup</code> installs <code>fe</code> into <code>~/.fe/bin</code>. The <code>source</code> line adds that directory to <code>PATH</code> for the current shell. Put the same <code>source ~/.fe/env</code> in your shell profile if you want it every time.</p>
+<p>Homebrew also has a tap (<code>brew install fe-lang/tap/fe</code>). Prefer the <code>feup</code> command above when you need this exact version.</p>
+<p>The Anvil half of the tour needs Foundry. Fe 26.5 targets the Osaka hardfork, so the node has to understand Osaka:</p>
+<pre><code class="language-bash">curl -fsSL https://foundry.paradigm.xyz | bash
+foundryup
+anvil --version
+</code></pre>
+<p>This prototype was checked with Foundry 1.8.6.</p>
+<h2 id="2-hello-contract">2. Hello, contract</h2>
+<p>Do this in <code>/tmp</code>, not in the project directory. <code>fe new</code> refuses to overwrite an existing <code>fe.toml</code>, and the project already has one.</p>
+<pre><code class="language-bash">mkdir -p /tmp/fe-hello
+cd /tmp/fe-hello
+fe new counter
+cd counter
+fe test
+fe build --out-dir /tmp/fe-hello-out
+ls /tmp/fe-hello-out
+</code></pre>
+<p><code>fe test</code> compiles every <code>#[test]</code> and runs it in a built-in EVM. No node. <code>fe build</code> writes three files per contract:</p>
+<ul>
+<li><code>Counter.bin</code> — init bytecode, what you deploy</li>
+<li><code>Counter.runtime.bin</code> — the code stored on chain</li>
+<li><code>Counter.abi.json</code> — a Solidity-compatible ABI</li>
+</ul>
+<p>Open <code>src/lib.fe</code>. The scaffold is a counter. The pieces you will see again in the registry:</p>
+<pre><code class="language-fe">msg CounterMsg {
+    #[selector = sol(&quot;increment()&quot;)]
+    Increment,
+    #[selector = sol(&quot;get()&quot;)]
+    Get -&gt; u256,
+}
+
+struct CounterStore {
+    value: u256,
+}
+
+pub contract Counter {
+    mut store: CounterStore
+
+    init() uses (mut store) {
+        store.value = 0
+    }
+
+    recv CounterMsg {
+        Increment uses (mut store) {
+            store.value = store.value + 1
+        }
+        Get -&gt; u256 uses (store) {
+            store.value
+        }
+    }
+}
+</code></pre>
+<p>Read it as:</p>
+<ul>
+<li><code>msg</code> is the public interface. <code>sol("get()")</code> is the Solidity selector, computed at compile time, so <code>cast</code> can call <code>get()</code>.</li>
+<li><code>struct CounterStore</code> is the storage layout. It is persisted between calls.</li>
+<li><code>mut store</code> on the contract is the storage field. <code>mut</code> means handlers may write it.</li>
+<li><code>init</code> is the constructor. <code>uses (mut store)</code> is the effect: this code writes storage.</li>
+<li><code>Get</code> only <code>uses (store)</code>, so it cannot write. <code>Increment</code> can.</li>
+<li>The last expression of a handler is the return value. <code>Get</code> returns <code>store.value</code>.</li>
+</ul>
+<p>There are no semicolons. <code>var</code> is a mutable local. <code>let</code> is immutable.</p>
+<h3 id="a-test">A test</h3>
+<p>The scaffold's test deploys with <code>create2</code> and calls the message enum. That is the same pattern as <code>src/tests.fe</code> in this repo:</p>
+<pre><code class="language-fe">#[test]
+fn test_counter() uses (evm: mut Evm) {
+    let addr = evm.create2&lt;Counter&gt;(value: Wei::zero(), args: (), salt: 0)
+    let val: u256 = evm.call(
+        addr: addr,
+        gas: 100000,
+        value: Wei::zero(),
+        message: CounterMsg::Get {},
+    )
+    assert!(val == 0)
+}
+</code></pre>
+<p><code>uses (evm: mut Evm)</code> gives the test the right to deploy and call. <code>assert!</code> reverts the test on failure. <code>Wei::zero()</code> is zero ETH. <code>Wei</code> is not a plain integer; the next section is why that matters.</p>
+<h3 id="optional-a-native-executable">Optional: a native executable</h3>
+<p>Fe 26.5 can also emit a host executable. It is experimental. <strong>This project does not use it.</strong> The judge tour is the EVM contract, <code>fe test</code>, and Anvil. If you want to see the other backend once:</p>
+<pre><code class="language-bash">echo 'pub fn main() -&gt; i32 { 0 }' &gt; /tmp/hello_native.fe
+fe build --backend native --out-dir /tmp/fe-native-out /tmp/hello_native.fe
+/tmp/fe-native-out/hello_native; echo exit:$?
+</code></pre>
+<p>On the x86-64 Linux build of Fe 26.5.0 that command writes an executable and the process exits 0. If it does not on your machine, ignore it and stay with the contract.</p>
+<h2 id="3-how-a-fe-project-is-laid-out">3. How a Fe project is laid out</h2>
+<pre><code>fe.toml          the ingot (Fe's word for a package)
+src/lib.fe       crate root. Contracts and msgs here are the root module.
+src/agg.fe       module `agg`. From lib.fe you write `use agg::fedavg`.
+src/ledger.fe    module `ledger`
+</code></pre>
+<p><code>fe.toml</code> for this repo:</p>
+<pre><code class="language-toml">[ingot]
+name = &quot;fl_coord&quot;
+version = &quot;0.1.0&quot;
+</code></pre>
+<p>The manifest has no field for the compiler version. 26.5.0 ignores unknown keys. The pin lives in the comment at the top of <code>fe.toml</code>, in this file, and in <code>scripts/e2e.sh</code>, which refuses to run unless <code>fe --version</code> contains <code>26.5.0</code>.</p>
+<p>From a child file, the parent module is <code>super</code>:</p>
+<pre><code class="language-fe">use super::FlMsg
+</code></pre>
+<p>That is <code>src/agent.fe</code> importing the message enum declared in <code>src/lib.fe</code>.</p>
+<h2 id="4-the-types-this-demo-actually-uses">4. The types this demo actually uses</h2>
+<h3 id="integers-and-why-stake-is-not-an-integer">Integers, and why stake is not an integer</h3>
+<p><code>u256</code> is the EVM word. <code>i64</code> is a signed coordinate. <code>Wei</code> is an amount of ETH. <code>Wei + i64</code> does not compile. <code>Wei / 2</code> is still <code>Wei</code>. That is the property the slash code relies on (<code>src/slash.fe</code>):</p>
+<pre><code class="language-fe">let half = input.accuser_bond / 2
+let rest = input.accuser_bond - half
+</code></pre>
+<p><code>ether(1)</code>, <code>wei(1000)</code>, and <code>Wei::zero()</code> construct amounts. <code>amount.as_wei()</code> gives the raw <code>u256</code> when a getter has to return a plain integer to <code>cast</code>.</p>
+<h3 id="addresses">Addresses</h3>
+<p><code>Address::new(word)</code> checks that the word fits in 160 bits. <code>Address::zero()</code> is the zero address. <code>address.word()</code> is the <code>u256</code>. The registry rejects the zero address as a client.</p>
+<h3 id="structs-enums-traits">Structs, enums, traits</h3>
+<p><code>Coords</code> in <code>src/agg.fe</code> is the fake gradient: four <code>i64</code>s. <code>Phase</code> in <code>src/ledger.fe</code> is the round state machine (<code>Empty</code>, <code>Open</code>, <code>Attested</code>, <code>Settled</code>). It is stored inside the round record. A <code>match</code> has to cover every variant; forgetting <code>Settled</code> is a compile error.</p>
+<p><code>trait Commitment</code> gives <code>Coords</code> a <code>commit()</code> method that keccak-hashes the four words. Traits are how you hang an operation off a type without making it a method of every integer.</p>
+<p><code>WordVec&lt;const N: usize&gt; where N &gt; 0</code> is a const-generic vector. <code>WordVec&lt;0&gt;</code> is rejected at compile time. <code>sum</code> folds it with a closure (<code>|acc, word| acc + word</code>), which is new in 26.5. The test is <code>test_unit_wordvec_fold</code>.</p>
+<h3 id="storagemap">StorageMap</h3>
+<p>A map is not a memory <code>HashMap</code>. It is a contract storage collection, keyed like a Solidity <code>mapping</code> (<code>keccak256(key ++ slot)</code>).</p>
+<pre><code class="language-fe">pub clients: StorageMap&lt;Address, Client&gt;,
+pub receipts: StorageMap&lt;(u256, Address), Receipt&gt;,
+</code></pre>
+<p><code>get</code> copies the value out (the value type has to be <code>Copy</code>). <code>set</code> writes it back. Missing keys read as zero: a missing client is <code>registered: false</code> and <code>stake: Wei::zero()</code>. The round enum's first variant is <code>Empty</code>, which is also what a zeroed slot decodes as, so a round nobody has opened is empty.</p>
+<p>The maps live on one struct, <code>Ledger</code>, which is the contract's only storage field (<code>mut ledger: Ledger</code> in <code>src/lib.fe</code>). Methods on <code>Ledger</code> take <code>mut self</code> when they write. That is the same shape as the standard library's own storage examples.</p>
+<h3 id="messages-payable-events-errors">Messages, payable, events, errors</h3>
+<p><code>FlMsg</code> in <code>src/lib.fe</code> is the whole ABI. <code>#[payable]</code> is written on the arm inside <code>recv</code>, not on the message variant. <code>register</code> is payable. <code>openRound</code> is not. Sending ETH to a non-payable arm reverts.</p>
+<pre><code class="language-fe">#[event]
+pub struct ReceiptSubmitted {
+    #[indexed]
+    pub round_id: u256,
+    #[indexed]
+    pub client: Address,
+    pub update_hash: u256,
+    pub score: u256,
+}
+</code></pre>
+<p>Indexed fields become log topics. The handler emits with <code>log.emit(...)</code>, and it must <code>uses (..., mut log)</code>.</p>
+<p>Failures are <code>#[error]</code> structs in <code>src/errors.fe</code>. <code>revert_error(StakeTooSmall { sent, required })</code> reverts with a Solidity custom error. <code>fe test</code> prints the selector and the ABI payload when a test reverts.</p>
+<h3 id="labels-on-calls">Labels on calls</h3>
+<p>Fe call arguments are labeled. <code>hash_update(round_id: 1, client: 9, coords)</code> is the explicit form. A bare name is sugar for a label: <code>hash_update(round_id, client, coords)</code> works only when the local variables are already named <code>round_id</code>, <code>client</code>, and <code>coords</code>.</p>
+<p><code>hash_update(1, 9, coords)</code> does <strong>not</strong> compile against a normal parameter. This repo writes internal parameters as <code>_ round_id</code>, which drops the label, so the tests can pass values positionally. Standard library calls stay labeled: <code>evm.call(addr: ..., gas: ..., value: ..., message: ...)</code>.</p>
+<h3 id="tests-and-eth">Tests and ETH</h3>
+<p><code>#[test]</code> is enough for pure functions (<code>src/agg.fe</code>, <code>src/slash.fe</code>).</p>
+<p>A test that deploys a contract adds <code>uses (evm: mut Evm)</code>.</p>
+<p>A test that sends ETH also needs a balance. The test runner's caller starts at zero. This attribute funds the <strong>test contract</strong>, which is <code>msg.sender</code> for the calls it makes:</p>
+<pre><code class="language-fe">#[test(balance = 5000000)]
+fn test_stage1_register_open_submit() uses (evm: mut Evm) { /* ... */ }
+</code></pre>
+<p><code>#[test(should_revert)]</code> passes when the test reverts. Use it for "the second submit must fail". Pair it with a normal test of the happy path, because a revert during setup would also satisfy <code>should_revert</code>.</p>
+<h2 id="5-the-judge-tour-chapter-by-chapter">5. The judge tour, chapter by chapter</h2>
+<p>One round, four clients. Coordinates:</p>
+<table>
+<thead>
+<tr>
+<th>client</th>
+<th>vector</th>
+<th>L1 score</th>
+<th>role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td><code>(1, 2, 3, 4)</code></td>
+<td>10</td>
+<td>honest</td>
+</tr>
+<tr>
+<td>B</td>
+<td><code>(2, 2, 3, 4)</code></td>
+<td>11</td>
+<td>honest</td>
+</tr>
+<tr>
+<td>C</td>
+<td><code>(1, 1, 3, 5)</code></td>
+<td>10</td>
+<td>honest</td>
+</tr>
+<tr>
+<td>D</td>
+<td><code>(40, 40, 40, 40)</code></td>
+<td>160</td>
+<td>outlier</td>
+</tr>
+</tbody>
+</table>
+<p>The lower median of <code>[10, 10, 11, 160]</code> is <code>10</code>. The bound is <code>20</code>, so only D is an outlier. Integer FedAvg of all four averages to <code>(11, 11, 12, 13)</code>. Without D it averages to <code>(1, 1, 3, 4)</code>.</p>
+<h3 id="receipts">Receipts</h3>
+<p>What happens: clients register with stake, someone opens round <code>7</code>, each client submits a hash and a score. Storage keeps the hash and the score. It does not keep the four coordinates.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hash and L1</td>
+<td><code>hash_update</code>, <code>l1</code> in <code>src/agg.fe</code></td>
+</tr>
+<tr>
+<td>Books</td>
+<td><code>Ledger::register</code>, <code>open_round</code>, <code>submit</code> in <code>src/ledger.fe</code></td>
+</tr>
+<tr>
+<td>ABI and events</td>
+<td><code>Register</code>, <code>OpenRound</code>, <code>SubmitReceipt</code> in <code>src/lib.fe</code></td>
+</tr>
+<tr>
+<td>Tests</td>
+<td><code>test_stage1_register_open_submit</code>, <code>test_stage1_low_stake</code>, <code>test_stage1_double_submit</code></td>
+</tr>
+<tr>
+<td>Anvil</td>
+<td>the "chapter 1" echoes in <code>scripts/anvil_tour.sh</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>submit</code> appends the caller to <code>round.clients</code> and increments <code>receipt_count</code>. A second submit from the same client reverts with <code>AlreadySubmitted</code>. A stake below <code>min_stake</code> reverts with <code>StakeTooSmall</code>.</p>
+<h3 id="fedavg-no-trusted-aggregator">FedAvg, no trusted aggregator</h3>
+<p>What happens: anyone calls <code>attest</code> with the four vectors. For each client the contract recomputes the L1 and the hash. A mismatch reverts (<code>ScoreMismatch</code> or <code>HashMismatch</code>). If the set is exactly the set that submitted, it stores:</p>
+<ul>
+<li><code>sum_commitment</code> — keccak of the four <code>i256</code> sums</li>
+<li><code>avg_commitment</code> — keccak of the four average <code>i64</code>s</li>
+<li><code>set_commitment</code> — keccak of the sorted client addresses</li>
+<li><code>median_score</code> — for the poison rule</li>
+</ul>
+<p>The vectors are calldata. They are not written into the maps.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Math</td>
+<td><code>fedavg</code>, <code>median</code>, <code>participant_commitment</code> in <code>src/agg.fe</code></td>
+</tr>
+<tr>
+<td>Checks</td>
+<td><code>Ledger::attest</code> → <code>open_and_check</code> in <code>src/ledger.fe</code></td>
+</tr>
+<tr>
+<td>ABI</td>
+<td><code>Attest</code>, <code>PreviewAverage</code>, <code>AvgCommitment</code> in <code>src/lib.fe</code></td>
+</tr>
+<tr>
+<td>Tests</td>
+<td><code>test_stage2_attest_fedavg</code> (commitment equals <code>previewAverage</code> and the pure function), <code>test_stage2_bad_opening</code></td>
+</tr>
+<tr>
+<td>Anvil</td>
+<td>"chapter 2" in <code>scripts/anvil_tour.sh</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>previewAverage</code> is a pure function on the contract so the shell script can ask the chain what the commitment should be, instead of reimplementing keccak in bash.</p>
+<p>There is no aggregator key. The check is "these openings match the receipts, and this is the average." Anyone can submit the openings.</p>
+<h3 id="poison-vote-slash-revise">Poison vote, slash, revise</h3>
+<p>What happens:</p>
+<ol>
+<li>After attestation, client A posts <code>bond</code> and accuses D.</li>
+<li>Client B posts <code>vote_bond</code> in support.</li>
+<li>Anyone calls <code>resolve</code>.</li>
+<li>D's norm is an outlier and there is one support vote with more support stake than oppose stake, so the verdict is <strong>upheld</strong> (code <code>1</code>). D's registration stake drops by <code>slash_amount</code>. Half of that slash is paid to A on top of A's returned bond. The other half stays in the contract as <code>treasury</code>. D's receipt is marked <code>poisoned</code>.</li>
+<li><code>revise</code> opens only A, B, and C. The new average commitment is the honest FedAvg. The round becomes <code>Settled</code>.</li>
+</ol>
+<p>The other two verdicts, both tested:</p>
+<ul>
+<li><strong>False accusation</strong> (code <code>2</code>). Accusing B, whose score is <code>11</code>, fails the outlier check even if people would have voted yes. A's bond is slashed: half to B, half to treasury. B's registration stake is untouched.</li>
+<li><strong>Failed quorum</strong> (code <code>3</code>). Accusing D but nobody votes. The accusation was not false, it was unsupported. A's bond is returned. D is not slashed.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Verdict math</td>
+<td><code>settle</code> in <code>src/slash.fe</code></td>
+</tr>
+<tr>
+<td>State machine</td>
+<td><code>accuse</code>, <code>vote</code>, <code>resolve</code>, <code>revise</code> in <code>src/ledger.fe</code></td>
+</tr>
+<tr>
+<td>ETH movement</td>
+<td><code>send</code> / <code>send_payout</code> in <code>src/lib.fe</code></td>
+</tr>
+<tr>
+<td>Tests</td>
+<td><code>test_stage3_upheld_slash_and_revise</code>, <code>test_stage3_false_accusation</code>, <code>test_stage3_failed_quorum</code>, <code>test_stage3_self_accusation</code>, <code>test_tour_judge_full</code></td>
+</tr>
+<tr>
+<td>Anvil</td>
+<td>"chapter 3" in <code>scripts/anvil_tour.sh</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>test_tour_judge_full</code> is the whole story in one test, and it checks the contract's ETH balance after payouts (<code>3750</code> wei with the small test stakes). The Anvil script uses 1 ether stakes so the numbers are readable on a chain, and checks the same ratios.</p>
+<h3 id="why-srcagentfe-exists">Why <code>src/agent.fe</code> exists</h3>
+<p><code>fe test</code> has one sender: the test contract. The registry keys clients by <code>ctx.caller()</code>. The tour deploys four <code>Agent</code> contracts and calls those. Each agent forwards <code>register</code>, <code>submit</code>, <code>accuse</code>, and <code>vote</code> to the registry, so the registry sees four callers.</p>
+<p>Agents also have a payable fallback (<code>recv { #[payable] _ {} }</code>) so a slash payout of bare ETH does not bounce.</p>
+<p>On Anvil you skip Agent. Accounts 1–4 call <code>FlRegistry</code> themselves. Account 0 deploys and can attest, because attestation is permissionless.</p>
+<h2 id="6-run-it">6. Run it</h2>
+<p>From the repository root, with <code>fe</code> and <code>anvil</code> on <code>PATH</code>:</p>
+<pre><code class="language-bash">fe test
+fe build --out-dir out
+./scripts/e2e.sh --ci
+</code></pre>
+<p>The menu (<code>./scripts/e2e.sh</code> in a terminal) runs the same stages one at a time; item 9 runs all eight, with teardown last. Logs land in <code>logs/e2e-&lt;timestamp&gt;/</code>. That directory is gitignored, and teardown does not delete it.</p>
+<p><code>./scripts/e2e.sh --stage 4</code> is chapter 1 only. <code>--stage 8</code> is teardown only. Stage numbers are printed by <code>--help</code>. The README has a step-by-step demo.</p>
+<h2 id="7-what-this-file-is-not">7. What this file is not</h2>
+<p>It is not a full language reference. The guide at https://fe-lang.org/getting-started/first-contract/ is the official one, and it is the right next read after the counter above. This file only covers the slice the registry uses, so you can change a chapter without learning the whole compiler first.</p>
+      </article>
+    </section>
+
+    <section class="panel wide" role="tabpanel" id="panel-source" aria-labelledby="tab-source" hidden>
+      <p class="kicker">Project source</p>
+      <h1>Read or download the explorer tree</h1>
+      <figure class="diagram"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 90" role="img" aria-label="The project source tree, for reading and download.">
+
+  <defs>
+    <linearGradient id="source_tree_29_brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <pattern id="source_tree_29_hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#8a7248" stroke-width="1.1" stroke-opacity="0.55"/>
+    </pattern>
+    <marker id="source_tree_29_arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#c4a574"/>
+    </marker>
+    <marker id="source_tree_29_arr-bright" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#e0c894"/>
+    </marker>
+  </defs>
+
+  <rect x="16" y="14" width="828" height="62" rx="12" fill="#1a1512" stroke="#3d3229" stroke-width="1.5"/>
+  <rect x="36" y="30" width="22" height="28" rx="3" fill="#221c18" stroke="#c4a574" stroke-width="1.3"/>
+  <rect x="48" y="36" width="22" height="28" rx="3" fill="#2a221c" stroke="#c4a574" stroke-width="1.3"/>
+  <text x="90" y="52" font-family="Cormorant Garamond, Georgia, serif" font-size="20" fill="#f3ebe0" font-weight="600">Source</text>
+  <text x="430" y="52" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#a89888" text-anchor="middle">Read it here, or download the zip  ·  public on GitHub</text>
+</svg>
+</figure>
+      <ul class="summary">
+        <li>The public repository is <a href="https://github.com/kentydotcom/Fe-Builder-Challenge-2026">github.com/kentydotcom/Fe-Builder-Challenge-2026</a>.</li>
+        <li>Download the tree as a zip if you want it offline.</li>
+      </ul>
+      <div class="actions">
+        <a class="btn" href="fe-fl-judge-tour.zip" download>Download source zip</a>
+        <a class="btn secondary" href="#source/README.md" data-open-source="README.md">Open README.md</a>
+      </div>
+      <div class="source-shell">
+        <nav class="source-nav" id="source-list" aria-label="Source files">
+<div class="group">Root</div>
+<button type="button" data-path="README.md">README.md</button>
+<button type="button" data-path="SUBMISSION.md">SUBMISSION.md</button>
+<button type="button" data-path="WALKTHROUGH.md">WALKTHROUGH.md</button>
+<button type="button" data-path="RECONSTRUCTION.md">RECONSTRUCTION.md</button>
+<button type="button" data-path="LICENSE">LICENSE</button>
+<button type="button" data-path="fe.toml">fe.toml</button>
+<button type="button" data-path=".gitignore">.gitignore</button>
+<div class="group">Scripts</div>
+<button type="button" data-path="scripts/e2e.sh">scripts/e2e.sh</button>
+<button type="button" data-path="scripts/anvil_tour.sh">scripts/anvil_tour.sh</button>
+<div class="group">Source</div>
+<button type="button" data-path="src/lib.fe">src/lib.fe</button>
+<button type="button" data-path="src/ledger.fe">src/ledger.fe</button>
+<button type="button" data-path="src/agg.fe">src/agg.fe</button>
+<button type="button" data-path="src/slash.fe">src/slash.fe</button>
+<button type="button" data-path="src/agent.fe">src/agent.fe</button>
+<button type="button" data-path="src/events.fe">src/events.fe</button>
+<button type="button" data-path="src/errors.fe">src/errors.fe</button>
+<button type="button" data-path="src/tests.fe">src/tests.fe</button>
+</nav>
+        <div class="source-view">
+          <div class="bar">
+            <span class="path" id="source-path">README.md</span>
+            <span class="meta" id="source-meta"></span>
+          </div>
+          <pre><code id="source-code"></code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      Checkable Coordinator (ingot <code>fl_coord</code>). MIT License, Copyright 2026 Kent G Lau, PhD. Source: <a href="https://github.com/kentydotcom/Fe-Builder-Challenge-2026">github.com/kentydotcom/Fe-Builder-Challenge-2026</a>. Exploratory Fe first written 28 October 2026.
+    </div>
+  </footer>
+
+  <script>window.SOURCE_FILES = ["README.md", "SUBMISSION.md", "WALKTHROUGH.md", "RECONSTRUCTION.md", "LICENSE", "fe.toml", ".gitignore", "scripts/e2e.sh", "scripts/anvil_tour.sh", "src/lib.fe", "src/ledger.fe", "src/agg.fe", "src/slash.fe", "src/agent.fe", "src/events.fe", "src/errors.fe", "src/tests.fe"];</script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 168" role="img" aria-label="Clients train a shared model. Raw data stays with them.">
+
+  <defs>
+    <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#8a7248" stroke-width="1.1" stroke-opacity="0.55"/>
+    </pattern>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#c4a574"/>
+    </marker>
+    <marker id="arr-bright" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#e0c894"/>
+    </marker>
+  </defs>
+
+  <!-- four clients with locked data that stays put -->
+  
+  <rect x="36.0" y="34.0" width="44" height="36" rx="8" fill="#221c18" stroke="url(#brass)" stroke-width="1.6"/>
+  <text x="58" y="57" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">A</text>
+  
+  <rect x="36.0" y="98.0" width="44" height="36" rx="8" fill="#221c18" stroke="url(#brass)" stroke-width="1.6"/>
+  <text x="58" y="121" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">C</text>
+  
+  <rect x="128.0" y="34.0" width="44" height="36" rx="8" fill="#221c18" stroke="url(#brass)" stroke-width="1.6"/>
+  <text x="150" y="57" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">B</text>
+  
+  <rect x="128.0" y="98.0" width="44" height="36" rx="8" fill="#221c18" stroke="url(#brass)" stroke-width="1.6"/>
+  <text x="150" y="121" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">D</text>
+  <!-- lock / data stays under each? one lock badge near the group -->
+  <g>
+    <rect x="92" y="72" width="24" height="20" rx="3" fill="#120e0c" stroke="#c4a574" stroke-width="1.3"/>
+    <path d="M99 72 V66 A5 5 0 0 1 109 66 V72" stroke="#e0c894" stroke-width="1.4" stroke-linecap="round"/>
+    <circle cx="104" cy="82" r="2" fill="#e0c894"/>
+  </g>
+  <text x="104" y="108" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">Raw data</text>
+  <!-- arrows to shared model, not carrying the data box -->
+  <path d="M176 64 C200 64 210 74 226 84" stroke="#c4a574" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path d="M176 104 C200 104 210 94 226 88" stroke="#c4a574" stroke-width="1.5" marker-end="url(#arr)"/>
+  <circle cx="256" cy="84" r="28" fill="#2a221c" stroke="url(#brass)" stroke-width="1.8"/>
+  <circle cx="256" cy="84" r="8" fill="none" stroke="#e0c894" stroke-width="1.5"/>
+  <circle cx="244" cy="70" r="3" fill="#c4a574"/>
+  <circle cx="270" cy="70" r="3" fill="#c4a574"/>
+  <circle cx="244" cy="98" r="3" fill="#c4a574"/>
+  <circle cx="270" cy="98" r="3" fill="#c4a574"/>
+  <path d="M246 72 L253 81 M267 72 L259 81 M246 96 L253 87 M267 96 L259 87" stroke="#8a7248" stroke-width="1"/>
+  <text x="256" y="132" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">Shared model</text>
+  </svg>

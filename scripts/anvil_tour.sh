@@ -39,6 +39,7 @@ cleanup() {
     kill "$ANVIL_PID" >/dev/null 2>&1 || true
     wait "$ANVIL_PID" >/dev/null 2>&1 || true
   fi
+  rm -f "${ROOT}/.anvil.pid"
 }
 trap cleanup EXIT
 
@@ -46,6 +47,7 @@ if [[ -z "${ANVIL_RPC:-}" ]]; then
   anvil --host 127.0.0.1 --port "$PORT" --hardfork osaka --silent >/tmp/fl-anvil.log 2>&1 &
   ANVIL_PID=$!
   STARTED_ANVIL=1
+  echo "$ANVIL_PID" > "${ROOT}/.anvil.pid"
   ready=0
   for _ in $(seq 1 50); do
     if cast chain-id --rpc-url "$RPC" >/dev/null 2>&1; then

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 168" role="img" aria-label="Peers bond a charge, slash a real outlier, and revise the average.">
+
+  <defs>
+    <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8d5a8"/>
+      <stop offset="45%" stop-color="#c4a574"/>
+      <stop offset="100%" stop-color="#8a7248"/>
+    </linearGradient>
+    <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#8a7248" stroke-width="1.1" stroke-opacity="0.55"/>
+    </pattern>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#c4a574"/>
+    </marker>
+    <marker id="arr-bright" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#e0c894"/>
+    </marker>
+  </defs>
+
+  <!-- bond -->
+  <circle cx="48" cy="78" r="22" fill="#221c18" stroke="url(#brass)" stroke-width="1.7"/>
+  <circle cx="48" cy="78" r="15" stroke="#8a7248" stroke-width="1"/>
+  <text x="48" y="83" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">Bond</text>
+  <path d="M72 78 H102" stroke="#c4a574" stroke-width="1.6" marker-end="url(#arr-bright)"/>
+  <!-- slash D -->
+  <rect x="108" y="50" width="70" height="56" rx="8" fill="#1a1512" stroke="#5c4a38" stroke-width="1.6"/>
+  <text x="143" y="76" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#f3ebe0" text-anchor="middle" font-weight="500">D</text>
+  <path d="M120 58 L166 98 M166 58 L120 98" stroke="#e0c894" stroke-width="2.1" stroke-linecap="round"/>
+  <text x="143" y="122" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#a89888" text-anchor="middle">Slash outlier</text>
+  <path d="M178 78 H208" stroke="#c4a574" stroke-width="1.6" marker-end="url(#arr-bright)"/>
+  <!-- revised average from A B C -->
+  <rect x="214" y="36" width="130" height="96" rx="10" fill="#2a221c" stroke="url(#brass)" stroke-width="1.7"/>
+  <text x="250" y="62" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">A</text>
+  <text x="279" y="62" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">B</text>
+  <text x="308" y="62" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#f3ebe0" text-anchor="middle">C</text>
+  <path d="M250 70 V84 H308 V70" stroke="#8a7248" stroke-width="1.2"/>
+  <path d="M279 84 V96" stroke="#c4a574" stroke-width="1.4" marker-end="url(#arr)"/>
+  <text x="279" y="114" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#e0c894" text-anchor="middle" font-weight="500">Revised average</text>
+  <text x="180" y="154" font-family="DM Sans, ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#a89888" text-anchor="middle">A false charge costs the accuser</text>
+</svg>

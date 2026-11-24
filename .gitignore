@@ -60,3 +60,8 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+# Generated explorer output (source lives in explorer/; do not commit secrets)
+explorer/.venv/
+explorer/public/tree/
+explorer/public/fe-fl-judge-tour.zip

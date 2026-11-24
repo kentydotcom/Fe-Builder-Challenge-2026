@@ -326,9 +326,9 @@ fe build --out-dir out
 ./scripts/e2e.sh --ci
 ```
 
-The menu (`./scripts/e2e.sh` in a terminal) runs the same stages one at a time. Logs land in `logs/e2e-<timestamp>/`. That directory is gitignored.
+The menu (`./scripts/e2e.sh` in a terminal) runs the same stages one at a time; item 9 runs all eight, with teardown last. Logs land in `logs/e2e-<timestamp>/`. That directory is gitignored, and teardown does not delete it.
 
-`./scripts/e2e.sh --stage 4` is chapter 1 only. Stage numbers are printed by `--help`.
+`./scripts/e2e.sh --stage 4` is chapter 1 only. `--stage 8` is teardown only. Stage numbers are printed by `--help`. The README has a step-by-step demo.
 
 ## 7. What this file is not
 

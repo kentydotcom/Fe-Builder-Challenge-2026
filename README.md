@@ -64,10 +64,11 @@ src/agent.fe            test-only forwarder so fe test can impersonate clients
 src/events.fe           event types
 src/errors.fe           custom errors
 src/tests.fe            chapter tests and the full tour
-scripts/e2e.sh          tour menu and --ci
+scripts/e2e.sh          tour menu and --ci (eight stages, teardown last)
 scripts/anvil_tour.sh   same story on a local Anvil node
 WALKTHROUGH.md          Fe from zero, then the map from chapters to files
 SUBMISSION.md           contest write-up the jury is asked to start from
+explorer/               static Judge Tour site (live at https://fe-fl-kent-private.fly.dev/)
 ```
 
 `Agent` exists because `fe test` sends every call from the test contract. Each simulated client is its own tiny contract that forwards to the registry. On Anvil, ordinary accounts call `FlRegistry` directly. Agent is not part of that path.
@@ -94,10 +95,10 @@ From this directory:
 ```bash
 fe test                 # 20 tests, in-process EVM
 fe build --out-dir out  # out/FlRegistry.bin and FlRegistry.abi.json
-./scripts/e2e.sh --ci   # toolchain, build, unit, chapters 1–3, Anvil
+./scripts/e2e.sh --ci   # stages 1–8, ending with teardown
 ```
 
-`./scripts/e2e.sh` with no arguments opens a menu when stdin is a terminal. Each stage writes `logs/e2e-<timestamp>/<stage>.log` and prints pass/fail plus seconds. The process exits 0 only if every stage passed.
+`./scripts/e2e.sh` with no arguments opens a menu when stdin is a terminal. Use the menu to run one stage, or item 9 to run all eight in order (teardown last). Each stage writes `logs/e2e-<timestamp>/<stage>.log` and prints pass/fail plus seconds. The process exits 0 only if every requested stage passed.
 
 A judge who only wants the chain story can run `./scripts/anvil_tour.sh` after `fe build`. It uses Anvil's published development keys, deploys `FlRegistry`, and checks scores, hashes, the average commitment, the slash, and the revised average. Those keys are not secret and must not be used anywhere else.
 
@@ -105,15 +106,105 @@ New to Fe? Read [WALKTHROUGH.md](WALKTHROUGH.md) first. It is written for someon
 
 ## Demo
 
-There is no hosted frontend in this repository. The reproducible demo is the CLI tour:
+A hosted Judge Tour explorer is at [https://fe-fl-kent-private.fly.dev/](https://fe-fl-kent-private.fly.dev/). It is ungated. It is a static, phone-first walkthrough of the same eight-stage tour (teardown last). Fe and Anvil are not executed there. Source for that site is in [`explorer/`](explorer/).
+
+The reproducible run is the CLI tour driven by `scripts/e2e.sh`. It does not train a model and does not talk to a public network. Follow the steps in order.
+
+### 1. Install the toolchain
+
+You need Fe **26.5.0** exactly (not an unpinned "latest") and Foundry, because the last chapters start a local Anvil node on the Osaka hardfork.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/argotorg/fe/master/feup/feup.sh | bash -s -- --version v26.5.0
+source ~/.fe/env
+fe --version    # expect: fe 26.5.0 (3dab95f)
+
+curl -fsSL https://foundry.paradigm.xyz | bash
+foundryup
+anvil --version
+```
+
+`scripts/e2e.sh` puts `~/.fe/bin` and `~/.foundry/bin` on `PATH` for you, but the binaries still have to be installed.
+
+### 2. Get the repository and enter it
+
+```bash
+git clone https://github.com/kentydotcom/Fe-Builder-Challenge-2026.git
+cd Fe-Builder-Challenge-2026
+```
+
+If you already have a checkout, `cd` to that directory instead. All later commands are run from the repository root (the folder that contains `fe.toml` and `scripts/e2e.sh`).
+
+### 3. Pick how to run the tour
+
+The same eight stages run either way. The script exits 0 only if every stage it was asked to run has passed.
+
+**Unattended (what most judges, and CI, should use):**
 
 ```bash
 ./scripts/e2e.sh --ci
 ```
 
-That run covers the toolchain pin, `fe build`, the unit tests, three chaptered in-EVM stories (receipts, FedAvg attest, poison vote and slash), and a local Anvil deployment of the same contract. `./scripts/anvil_tour.sh` is the Anvil chapter on its own.
+`--all` is the same as `--ci`. If stdin is not a terminal, `./scripts/e2e.sh` with no arguments also runs every stage.
 
-On 2026-11-23, on a ThinkPad T14 running this tree, `fe test --jobs 1` was **20 passed, 0 failed** and `./scripts/e2e.sh --ci` was **7 stages passed, 0 failed**, with Fe 26.5.0 (`3dab95f`) and Foundry 1.8.4.
+**Interactive menu** (when you are at a terminal and want to go chapter by chapter):
+
+```bash
+./scripts/e2e.sh
+```
+
+You will get:
+
+```
+Checkable Coordinator
+  1  toolchain check (Fe 26.5.0)
+  2  build
+  3  unit tests (FedAvg, hashes, slash math)
+  4  chapter 1 — receipts
+  5  chapter 2 — FedAvg attest
+  6  chapter 3 — poison vote and slash
+  7  full tour (in-EVM test + Anvil)
+  8  teardown (stop leftover Anvil, keep logs)
+  9  run all
+  q  quit
+```
+
+Type `1`–`8` to run that stage alone, `9` to run all eight in order (teardown last), or `q` to leave. One stage at a time is useful if you want to read a chapter before the next one. `--stage N` does the same thing without the menu, for example `./scripts/e2e.sh --stage 4` for receipts only.
+
+A passing `--ci` run already starts and stops Anvil itself. You do not have to run `./scripts/anvil_tour.sh` as well. That script is only if you want the on-chain story by itself, after `fe build --out-dir out`. It uses Anvil's published development keys on a local node; those keys are not secret and must not be used anywhere else.
+
+### 4. What each stage does
+
+| # | Stage | What it checks |
+| --- | --- | --- |
+| 1 | toolchain | `fe --version` is 26.5.0, and `cast` / `anvil` are on `PATH` |
+| 2 | build | `fe build --out-dir out`, then `out/FlRegistry.bin` and `out/FlRegistry.abi.json` exist |
+| 3 | unit | Pure FedAvg, hash, and slash tests (`fe test --filter test_unit`) |
+| 4 | chapter 1 | Register clients, open a round, submit receipt hashes |
+| 5 | chapter 2 | Anyone can attest; the contract recomputes integer FedAvg |
+| 6 | chapter 3 | Poison vote, slash, and a revised average without the outlier |
+| 7 | tour | The full in-EVM story, then the same story on a local Anvil node (`./scripts/anvil_tour.sh`). Anvil listens on `127.0.0.1:18545` and is stopped when that script exits |
+| 8 | teardown | **Always last** in `--ci` and in menu item 9. It confirms Anvil is gone, removes a leftover `.anvil.pid` or `/tmp/fl-anvil.log` if one is still there, and leaves `logs/e2e-*` alone. It is safe if nothing is running: that is a pass, not a skip |
+
+A failure in one stage does not skip the later ones. Teardown still runs at the end of `--ci` so a failed tour cannot leave a node behind. The overall exit code is non-zero if any stage failed.
+
+### 5. Where the logs go
+
+Each run makes a fresh directory, `logs/e2e-<UTC-timestamp>/`, with one log file per stage (`toolchain.log`, `build.log`, …, `teardown.log`). That folder is gitignored. Teardown does not delete the current run's logs, or older `logs/e2e-*` directories.
+
+If a stage fails, the script prints the path and the last lines of that stage's log.
+
+### 6. What a passing run looks like
+
+The printed summary at the end should have eight `PASS` lines, teardown last, and this footer:
+
+```
+PASS  8 stages, 0 failed
+```
+
+Times will vary by machine. The stage names and the count of eight should not. The process exit code is 0.
+
+On 2026-11-24, on a ThinkPad T14 running this tree, `fe test --jobs 1` was **20 passed, 0 failed** and `./scripts/e2e.sh --ci` was **8 stages passed, 0 failed**, with teardown last, Fe 26.5.0 (`3dab95f`), and Foundry 1.8.4.
 
 ## Architecture
 

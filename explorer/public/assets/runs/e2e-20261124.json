@@ -1,0 +1,57 @@
+{
+  "recorded": "24 November 2026, Asia/Hong_Kong",
+  "fe": "26.5.0 (3dab95f)",
+  "foundry": "1.8.4",
+  "result": "PASS  8 stages, 0 failed",
+  "note": "Recorded logs from a passing ./scripts/e2e.sh --ci run. Fe is not executed in this explorer. Host paths have been generalized.",
+  "stages": [
+    {
+      "n": 1,
+      "id": "toolchain",
+      "title": "Fe 26.5.0 and Foundry on PATH",
+      "log": "fe\nfe 26.5.0 (3dab95f)\ncast Version: 1.8.4\nCommit SHA: 50af4efe189dc64bad2b75ed6990b835de66c4ae\nBuild Timestamp: 2026-10-01T14:08:28.191932892Z (1790863708)\nBuild Profile: dist\nanvil Version: 1.8.4\nCommit SHA: 50af4efe189dc64bad2b75ed6990b835de66c4ae\nBuild Timestamp: 2026-10-01T14:08:28.191932892Z (1790863708)\nBuild Profile: dist\n"
+    },
+    {
+      "n": 2,
+      "id": "build",
+      "title": "fe build --out-dir out",
+      "log": "Wrote out/Agent.bin\nWrote out/Agent.runtime.bin\nWrote out/FlRegistry.bin\nWrote out/FlRegistry.runtime.bin\nWrote out/Agent.abi.json\nWrote out/FlRegistry.abi.json\n"
+    },
+    {
+      "n": 3,
+      "id": "unit",
+      "title": "pure FedAvg, hash, and slash tests",
+      "log": "PASS  [0.0002s] test_unit_fedavg_negative\nPASS  [0.0002s] test_unit_fedavg_truncates_toward_zero\nPASS  [0.0001s] test_unit_l1_and_hash\nPASS  [0.0001s] test_unit_median_and_outlier\nPASS  [0.0001s] test_unit_participant_commitment_sorts\nPASS  [0.0000s] test_unit_slash_failed_quorum\nPASS  [0.0000s] test_unit_slash_false_accusation\nPASS  [0.0000s] test_unit_slash_oppose_blocks_quorum\nPASS  [0.0000s] test_unit_slash_upheld_and_capped\nPASS  [0.0000s] test_unit_wordvec_fold\n\ntest result: ok. 10 passed; 0 failed\n"
+    },
+    {
+      "n": 4,
+      "id": "chapter1",
+      "title": "register, open round, submit receipts",
+      "log": "PASS  [0.0032s] test_stage1_double_submit\nPASS  [0.0023s] test_stage1_low_stake\nPASS  [0.0027s] test_stage1_register_open_submit\n\ntest result: ok. 3 passed; 0 failed\n"
+    },
+    {
+      "n": 5,
+      "id": "chapter2",
+      "title": "FedAvg attestation",
+      "log": "PASS  [0.0025s] test_stage2_attest_fedavg\nPASS  [0.0021s] test_stage2_bad_opening\n\ntest result: ok. 2 passed; 0 failed\n"
+    },
+    {
+      "n": 6,
+      "id": "chapter3",
+      "title": "poison vote, slash, revise",
+      "log": "PASS  [0.0049s] test_stage3_failed_quorum\nPASS  [0.0048s] test_stage3_false_accusation\nPASS  [0.0039s] test_stage3_self_accusation\nPASS  [0.0051s] test_stage3_upheld_slash_and_revise\n\ntest result: ok. 4 passed; 0 failed\n"
+    },
+    {
+      "n": 7,
+      "id": "tour",
+      "title": "in-EVM tour plus Anvil deployment",
+      "log": "PASS  [0.0035s] test_tour_judge_full\n\ntest result: ok. 1 passed; 0 failed\ndeployed FlRegistry at 0x5fbdb2315678afecb367f032d93f642f64180aa3\nok   client1 L1\nok   client2 L1\nok   client3 L1\nok   client4 L1\nchapter 1: register clients and open the round\nok   client1 registered\nok   client1 stake\nok   round open\nchapter 1: submit receipt hashes (no weights stored)\nok   four receipts\nok   outlier hash stored\nchapter 2: anyone may attest; the contract recomputes FedAvg\nok   round attested\nok   avg commitment matches preview\nok   median score\nok   attested count\nchapter 3: poison vote, slash, revise the average\nok   accusation id\nok   outlier marked poisoned\nok   accused stake slashed to 0.5 ether\nok   treasury took the other quarter\nchapter 3: revise FedAvg without the poisoned update\nok   round settled\nok   revised average is the honest FedAvg\nok   revised average differs from the poisoned round\nanvil judge tour passed\n"
+    },
+    {
+      "n": 8,
+      "id": "teardown",
+      "title": "stop leftover Anvil; keep logs",
+      "log": "teardown: checking port 18545 and pidfile .anvil.pid\nlogs for this run stay in logs/e2e-20261124T042858Z (not deleted)\nno pidfile (anvil_tour usually removes it on exit)\nno leftover anvil process on port 18545\nremoved /tmp/fl-anvil.log\nport 18545 is free\ncurrent run logs still in logs/e2e-20261124T042858Z\nteardown clean\n"
+    }
+  ]
+}
